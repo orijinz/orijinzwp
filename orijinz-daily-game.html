@@ -639,6 +639,13 @@
   <!-- Keyboard -->
   <div class="section-divider"><span>keyboard</span></div>
   <div class="keyboard" id="keyboard"></div>
+
+  <!-- Dev toolbar (only shown on github.io) -->
+  <div id="devToolbar" style="display:none; margin-top:18px; display:none; gap:10px; justify-content:center; flex-wrap:wrap;">
+    <button onclick="devNext()"  style="-webkit-appearance:none;appearance:none;background:#2e3260;color:#f5c842;border:1px solid #f5c842;border-radius:6px;padding:8px 18px;font-family:Space Mono,monospace;font-size:0.7rem;cursor:pointer;">&#9654; Next Puzzle</button>
+    <button onclick="devReset()" style="-webkit-appearance:none;appearance:none;background:#2e3260;color:#f5c842;border:1px solid #f5c842;border-radius:6px;padding:8px 18px;font-family:Space Mono,monospace;font-size:0.7rem;cursor:pointer;">&#8635; Reset</button>
+    <button onclick="devGoTo(prompt('Go to puzzle #:'))" style="-webkit-appearance:none;appearance:none;background:#2e3260;color:#f5c842;border:1px solid #f5c842;border-radius:6px;padding:8px 18px;font-family:Space Mono,monospace;font-size:0.7rem;cursor:pointer;">&#8594; Go To #</button>
+  </div>
 </main>
 
 <div class="toast" id="toast"></div>
@@ -1218,6 +1225,14 @@ try {
   if (p.has('next'))   devNext();
   else if (p.has('reset'))  devReset();
   else if (p.has('puzzle')) devGoTo(+p.get('puzzle'));
+} catch(e) {}
+// Show dev toolbar only on github.io or local file
+try {
+  const h = location.hostname;
+  if (h.includes('github.io') || h === 'localhost' || h === '') {
+    const tb = document.getElementById('devToolbar');
+    if (tb) tb.style.display = 'flex';
+  }
 } catch(e) {}
 let devTapCount = 0, devTapTimer = null;
 function initDevTap() {
