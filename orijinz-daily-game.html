@@ -206,8 +206,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Space Mono', monospace;
-    font-size: min(1.5rem, 3.8vw);
+    font-family: 'Playfair Display', serif;
+    font-size: min(1.6rem, 4vw);
     font-weight: 700;
     color: var(--white);
     transition: all 0.15s ease;
@@ -813,21 +813,12 @@ function fitWordGroups() {
   while (el && !availW) { availW = el.clientWidth; el = el.parentElement; }
   if (!availW) return;
   display.querySelectorAll('.word-group').forEach(g => {
-    const tiles = [...g.querySelectorAll('.letter-tile')];
-    if (!tiles.length) return;
-    // Reset any previous inline sizing
-    tiles.forEach(t => { t.style.width = ''; t.style.height = ''; t.style.fontSize = ''; });
-    const gap = parseFloat(getComputedStyle(g).gap) || 7;
-    const naturalW = tiles[0].getBoundingClientRect().width || 52;
-    const totalW = tiles.length * naturalW + (tiles.length - 1) * gap;
-    if (totalW > availW) {
-      const tileW = Math.max(18, (availW - (tiles.length - 1) * gap) / tiles.length);
-      const ratio = tileW / naturalW;
-      tiles.forEach(t => {
-        t.style.width    = tileW + 'px';
-        t.style.height   = (tileW * 58 / 52) + 'px';
-        t.style.fontSize = Math.max(0.5, ratio * 1.5) + 'rem';
-      });
+    // Reset previous scaling
+    g.style.zoom = '';
+    g.querySelectorAll('.letter-tile').forEach(t => { t.style.width = ''; t.style.height = ''; t.style.fontSize = ''; });
+    const groupW = g.scrollWidth;
+    if (groupW > availW * 0.98) {
+      g.style.zoom = String(availW / groupW);
     }
   });
 }
