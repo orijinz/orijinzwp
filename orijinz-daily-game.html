@@ -7,21 +7,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@300;400;600;700&family=Space+Mono:wght@400;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg:            #12142a;
-    --bg2:           #1c1f3a;
-    --bg3:           #252849;
-    --panel:         #1e2240;
-    --border:        #2e3260;
+    --bg:            #0b1a26;
+    --bg2:           #0d1e2e;
+    --bg3:           #0d2233;
+    --panel:         #0d1d2c;
+    --border:        #1c3445;
     --text:          #ffffff;
-    --text-muted:    #8b90b8;
+    --text-muted:    #7aafc4;
     --gold:          #f5c842;
     --gold-dim:      #c9a230;
-    --blue:          #4CB3D1;
-    --blue-light:    #87C7DD;
-    --blue-dark:     #3490aa;
+    --blue:          #43BAD0;
+    --blue-light:    #7FCEDB;
+    --blue-dark:     #2e9ab8;
     --amber:         #f0932b;
-    --grey:          #4a4f72;
-    --grey-light:    #6b7099;
+    --grey:          #3a6a82;
+    --grey-light:    #4a8fa8;
     --red:           #e05252;
     --white:         #ffffff;
     --wrong:         var(--grey);
@@ -34,8 +34,10 @@
   body {
     background-color: var(--bg);
     background-image:
-      radial-gradient(ellipse at 15% 0%, rgba(76,179,209,0.08) 0%, transparent 45%),
-      radial-gradient(ellipse at 85% 100%, rgba(245,200,66,0.06) 0%, transparent 45%);
+      radial-gradient(ellipse at 50% 0%, rgba(67,186,208,0.07) 0%, transparent 40%),
+      radial-gradient(ellipse at 20% 20%, #0d2a3e 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 80%, #0b1e30 0%, transparent 55%),
+      radial-gradient(ellipse at 50% 50%, #0e2333 0%, transparent 70%);
     font-family: 'Nunito Sans', sans-serif;
     color: var(--text);
     min-height: 100vh;
@@ -54,14 +56,13 @@
     position: relative;
   }
   .header-ornament {
-    font-size: 10px;
-    letter-spacing: 0.3em;
+    font-size: 0.68rem;
+    letter-spacing: 0.4em;
     text-transform: uppercase;
-    color: var(--blue);
-    font-family: 'Nunito', sans-serif;
+    color: #ffffff;
+    font-family: 'Nunito Sans', sans-serif;
     font-weight: 700;
-    margin-bottom: 6px;
-    opacity: 0.85;
+    margin-bottom: 8px;
   }
   .logo {
     font-family: 'Nunito', sans-serif;
@@ -69,9 +70,14 @@
     font-weight: 900;
     letter-spacing: -0.01em;
     line-height: 1;
-    color: var(--white);
   }
-  .logo span { color: var(--gold); }
+  .logo .logo-brand { color: var(--blue); }
+  .logo .logo-daily {
+    background: linear-gradient(90deg, var(--blue-light), #e8f6ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
   .header-sub {
     font-size: 0.85rem;
     color: var(--text-muted);
@@ -119,34 +125,20 @@
   /* ORIGIN CARD — no opacity:0 start so iOS never hides it */
   .origin-card {
     width: 100%;
-    background: var(--panel);
-    border: 1px solid rgba(107,79,42,0.3);
-    border-radius: 4px;
-    padding: 28px 32px;
+    background-color: var(--panel);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'%3E%3Ctext x='4' y='29' font-family='Georgia%2Cserif' font-size='28' font-weight='bold' fill='rgba(127%2C206%2C219%2C0.07)'%3E%3F%3C%2Ftext%3E%3C%2Fsvg%3E");
+    background-size: 36px 36px;
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--blue-light);
+    border-radius: 8px;
+    padding: 20px 22px;
     position: relative;
-    box-shadow: 0 2px 20px rgba(26,18,8,0.08), inset 0 1px 0 rgba(255,255,255,0.05);
+    overflow: hidden;
     animation: cardReveal 0.5s ease-out;
   }
   @keyframes cardReveal {
     from { transform: translateY(8px); }
     to   { transform: translateY(0); }
-  }
-  .origin-card::before {
-    content: '\2767';
-    position: absolute;
-    top: 12px; left: 16px;
-    color: var(--gold);
-    font-size: 1rem;
-    opacity: 0.5;
-  }
-  .origin-card::after {
-    content: '\2767';
-    position: absolute;
-    bottom: 12px; right: 16px;
-    color: var(--gold);
-    font-size: 1rem;
-    opacity: 0.5;
-    transform: rotate(180deg);
   }
   .origin-card-header {
     display: flex;
@@ -198,16 +190,16 @@
 
   /* LETTER TILES */
   .letter-tile {
-    width: min(52px, 6.5vw);
-    height: min(58px, 7.5vw);
+    width: min(46px, 6.5vw);
+    height: min(52px, 7.5vw);
     border: 2px solid var(--letter-border);
     background: var(--letter-bg);
-    border-radius: 3px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: 'Playfair Display', serif;
-    font-size: min(1.6rem, 4vw);
+    font-size: min(1.4rem, 3.5vw);
     font-weight: 700;
     color: var(--white);
     transition: all 0.15s ease;
@@ -216,7 +208,7 @@
     user-select: none;
   }
   .letter-tile.space-tile {
-    width: min(24px, 3vw);
+    width: min(20px, 2.5vw);
     border: none;
     background: transparent;
     box-shadow: none;
@@ -299,8 +291,9 @@
     height: 58px;
     padding: 0;
     border: none;
-    background: #3a3f6e;
-    border-radius: 6px;
+    background: #0d2233;
+    border: 1px solid #1a3a50;
+    border-radius: 8px;
     font-family: 'Space Mono', monospace;
     font-size: 0.95rem;
     font-weight: 700;
@@ -316,7 +309,7 @@
     -webkit-tap-highlight-color: transparent;
     box-shadow: 0 3px 0 rgba(0,0,0,0.3);
   }
-  .kb-key:hover { background: #4a5080; }
+  .kb-key:hover { background: #133040; }
   .kb-key:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.3); }
   .kb-key.wide { flex: 1.5; font-size: 0.75rem; }
 
@@ -331,28 +324,39 @@
     -webkit-appearance: none;
     appearance: none;
     padding: 10px 20px;
-    border: 1.5px solid var(--gold);
+    border: 1.5px solid var(--blue-light);
     background: transparent;
-    border-radius: 3px;
+    border-radius: 24px;
     font-family: 'Space Mono', monospace;
     font-size: 0.7rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--gold);
+    color: var(--blue-light);
     cursor: pointer;
     transition: all 0.15s ease;
   }
+  #revealBtn {
+    background: var(--blue);
+    border-color: var(--blue);
+    color: #fff;
+  }
   .clue-btn:hover:not(:disabled) {
-    background: var(--gold);
-    color: var(--bg);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(200,146,42,0.3);
+    box-shadow: 0 4px 12px rgba(67,186,208,0.25);
+  }
+  #revealBtn:hover:not(:disabled) {
+    background: var(--blue-light);
+    border-color: var(--blue-light);
+    color: var(--bg);
   }
   .clue-btn:disabled {
     opacity: 0.35;
     cursor: not-allowed;
     border-color: var(--text-muted);
     color: var(--text-muted);
+  }
+  #revealBtn:disabled {
+    background: transparent;
   }
   .clue-count {
     font-size: 0.6rem;
@@ -574,8 +578,8 @@
 <body>
 
 <header>
-  <div class="header-ornament">&#x2726; Word &amp; Phrase Origins &#x2726;</div>
-  <div class="logo">Ori<span>jinz</span> Daily</div>
+  <div class="header-ornament">&#x2726; Words &amp; Phrases &#x2726;</div>
+  <div class="logo"><span class="logo-brand">Orijinz</span><span class="logo-daily"> Daily</span></div>
   <div class="header-sub">Read the origin. Guess the word.</div>
   <div class="date-badge" id="dateBadge"></div>
   <button id="resetBtn" onclick="devReset()" title="Dev Reset">&#x21BA;</button>
