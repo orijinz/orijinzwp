@@ -206,8 +206,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Playfair Display', serif;
-    font-size: min(1.6rem, 4vw);
+    font-family: 'Space Mono', monospace;
+    font-size: min(1.5rem, 3.8vw);
     font-weight: 700;
     color: var(--white);
     transition: all 0.15s ease;
@@ -826,7 +826,7 @@ function fitWordGroups() {
       tiles.forEach(t => {
         t.style.width    = tileW + 'px';
         t.style.height   = (tileW * 58 / 52) + 'px';
-        t.style.fontSize = Math.max(0.5, ratio * 1.6) + 'rem';
+        t.style.fontSize = Math.max(0.5, ratio * 1.5) + 'rem';
       });
     }
   });
