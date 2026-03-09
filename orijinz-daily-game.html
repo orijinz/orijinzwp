@@ -488,6 +488,38 @@
     font-style: italic;
   }
 
+  /* RESULT STATS ROW */
+  .result-stats {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+  .result-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    background: rgba(67,186,208,0.07);
+    border: 1px solid rgba(67,186,208,0.18);
+    border-radius: 8px;
+    padding: 10px 20px;
+    min-width: 90px;
+  }
+  .result-stat-value {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--blue);
+  }
+  .result-stat-label {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-family: 'Space Mono', monospace;
+  }
+
   /* TIDBIT */
   .tidbit-panel {
     margin-top: 20px;
@@ -516,22 +548,25 @@
   .share-btn {
     -webkit-appearance: none;
     appearance: none;
-    padding: 12px 28px;
-    background: var(--bg);
-    color: var(--text);
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    padding: 10px 26px;
+    background: var(--blue);
+    color: var(--bg);
+    border: none;
+    border-radius: 999px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
     cursor: pointer;
     transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
   }
   .share-btn:hover {
-    background: var(--text-muted);
+    background: var(--blue-light);
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(26,18,8,0.2);
+    box-shadow: 0 6px 16px rgba(67,186,208,0.3);
   }
 
   /* INPUT SECTION */
@@ -607,6 +642,220 @@
     background: var(--bg3);
   }
 
+  /* HAMBURGER MENU */
+  #menuBtn {
+    -webkit-appearance: none;
+    appearance: none;
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px; height: 36px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    padding: 4px;
+    border-radius: 6px;
+    transition: background 0.15s ease;
+    z-index: 10;
+  }
+  #menuBtn:hover { background: rgba(255,255,255,0.07); }
+  #menuBtn span {
+    display: block;
+    width: 22px; height: 2px;
+    background: var(--text-muted);
+    border-radius: 2px;
+    transition: background 0.15s ease;
+  }
+  #menuBtn:hover span { background: var(--text); }
+
+  .menu-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 200;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  .menu-overlay.open { display: block; }
+  .menu-overlay.visible { opacity: 1; }
+
+  .menu-panel {
+    position: fixed;
+    top: 0; left: 0;
+    width: 260px; height: 100%;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    z-index: 201;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    display: flex;
+    flex-direction: column;
+    padding: 0 0 32px;
+  }
+  .menu-panel.open { transform: translateX(0); }
+
+  .menu-header {
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .menu-logo {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: var(--blue);
+  }
+  .menu-close {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.3rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px;
+    border-radius: 4px;
+    transition: color 0.15s ease;
+  }
+  .menu-close:hover { color: var(--text); }
+
+  .menu-items { padding: 12px 0; flex: 1; }
+  .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 20px;
+    color: var(--text-muted);
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    width: 100%;
+    text-align: left;
+    transition: background 0.15s ease, color 0.15s ease;
+    border-radius: 0;
+    letter-spacing: 0.01em;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .menu-item:hover { background: rgba(67,186,208,0.07); color: var(--text); }
+  .menu-item svg { opacity: 0.6; flex-shrink: 0; }
+  .menu-item:hover svg { opacity: 1; }
+  .menu-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 8px 20px;
+  }
+
+  /* STATISTICS MODAL */
+  .stats-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 300;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    align-items: center;
+    justify-content: center;
+  }
+  .stats-overlay.open    { display: flex; }
+  .stats-overlay.visible { opacity: 1; }
+
+  .stats-panel {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    width: min(480px, 92vw);
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 0 0 24px;
+    transform: translateY(16px);
+    transition: transform 0.3s ease;
+  }
+  .stats-overlay.visible .stats-panel { transform: translateY(0); }
+
+  .stats-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--bg2);
+    z-index: 1;
+  }
+  .stats-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: var(--blue);
+    letter-spacing: 0.01em;
+  }
+  .stats-close {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 4px;
+    transition: color 0.15s;
+  }
+  .stats-close:hover { color: var(--text); }
+
+  .stats-section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    padding: 18px 24px 8px;
+  }
+  .stats-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 24px;
+    border-bottom: 1px solid rgba(28,52,69,0.6);
+  }
+  .stats-row:last-child { border-bottom: none; }
+  .stats-label {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    font-family: 'Nunito Sans', sans-serif;
+  }
+  .stats-value {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--text);
+    min-width: 56px;
+    text-align: right;
+  }
+  .stats-note {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    opacity: 0.6;
+    padding: 16px 24px 0;
+    font-style: italic;
+    text-align: center;
+  }
+
   /* RESPONSIVE */
   @media (max-width: 480px) {
     .kb-key      { height: 46px; font-size: 0.82rem; }
@@ -621,6 +870,9 @@
 <body>
 
 <header>
+  <button id="menuBtn" onclick="openMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
   <div class="header-ornament">&#x2726; Words &amp; Phrases &#x2726;</div>
   <div class="logo"><span class="logo-brand">Orijinz</span><span class="logo-daily"> Daily</span></div>
   <div class="header-sub">Read the origin. Guess the word.</div>
@@ -628,6 +880,34 @@
   <button id="resetBtn" onclick="devReset()" title="Dev Reset">&#x21BA;</button>
   <button id="nextBtn"  onclick="devNext()"  title="Next Puzzle">&#x276F;</button>
 </header>
+
+<!-- Side menu -->
+<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+<nav class="menu-panel" id="menuPanel">
+  <div class="menu-header">
+    <span class="menu-logo">Orijinz</span>
+    <button class="menu-close" onclick="closeMenu()">&#x2715;</button>
+  </div>
+  <div class="menu-items">
+    <button class="menu-item" onclick="menuHome()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Home
+    </button>
+    <button class="menu-item" onclick="menuHelp()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Help
+    </button>
+    <div class="menu-divider"></div>
+    <button class="menu-item" onclick="menuStats()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Statistics
+    </button>
+    <button class="menu-item" onclick="menuSettings()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Advanced Settings
+    </button>
+  </div>
+</nav>
 
 <main>
   <div class="meta-row">
@@ -680,7 +960,17 @@
     <div class="result-headline" id="resultHeadline">Brilliant!</div>
     <div class="result-answer" id="resultAnswer"></div>
     <div class="result-msg" id="resultMsg"></div>
-    <button class="share-btn" onclick="shareResult()">&#x1F4CB; Share Result</button>
+    <div class="result-stats">
+      <div class="result-stat">
+        <span class="result-stat-value" id="rs-played">0</span>
+        <span class="result-stat-label">Days Played</span>
+      </div>
+      <div class="result-stat">
+        <span class="result-stat-value" id="rs-streak">0</span>
+        <span class="result-stat-label">Streak</span>
+      </div>
+    </div>
+    <button class="share-btn" onclick="shareResult()">Share! <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
     <div class="tidbit-panel" id="tidbitPanel">
       <div class="tidbit-label">Did you know?</div>
       <div class="tidbit-text" id="tidbitText"></div>
@@ -701,10 +991,212 @@
   </div>
 </main>
 
+<!-- Statistics modal -->
+<div class="stats-overlay" id="statsOverlay" onclick="handleStatsOverlayClick(event)">
+  <div class="stats-panel" id="statsPanel">
+    <div class="stats-panel-header">
+      <span class="stats-title">Statistics</span>
+      <button class="stats-close" onclick="closeStats()">&#x2715;</button>
+    </div>
+
+    <div class="stats-section-label">Games</div>
+    <div class="stats-row"><span class="stats-label">Days played</span>             <span class="stats-value" id="st-played">0</span></div>
+    <div class="stats-row"><span class="stats-label">Current streak</span>           <span class="stats-value" id="st-streak">0</span></div>
+    <div class="stats-row"><span class="stats-label">Longest streak</span>           <span class="stats-value" id="st-longest-streak">0</span></div>
+    <div class="stats-row"><span class="stats-label">Unfinished games</span>         <span class="stats-value" id="st-unfinished">0</span></div>
+    <div class="stats-row"><span class="stats-label">Pure wins (no hints)</span>     <span class="stats-value" id="st-pure-wins">0</span></div>
+
+    <div class="stats-section-label">Hints &amp; Mistakes</div>
+    <div class="stats-row"><span class="stats-label">Letters revealed</span>         <span class="stats-value" id="st-reveals">0</span></div>
+    <div class="stats-row"><span class="stats-label">Avg reveals per game</span>     <span class="stats-value" id="st-avg-reveals">0.0</span></div>
+    <div class="stats-row"><span class="stats-label">Definitions used</span>         <span class="stats-value" id="st-defs">0</span></div>
+    <div class="stats-row"><span class="stats-label">Wrong letters total</span>      <span class="stats-value" id="st-wrong">0</span></div>
+    <div class="stats-row"><span class="stats-label">Avg wrong per game</span>       <span class="stats-value" id="st-avg-wrong">0.0</span></div>
+
+    <div class="stats-section-label">Time</div>
+    <div class="stats-row"><span class="stats-label">Total time</span>               <span class="stats-value" id="st-total-time">0:00</span></div>
+    <div class="stats-row"><span class="stats-label">Avg time per game</span>        <span class="stats-value" id="st-avg-time">0:00</span></div>
+    <div class="stats-row"><span class="stats-label">Best time</span>                <span class="stats-value" id="st-best-time">--</span></div>
+
+    <div class="stats-section-label">Score</div>
+    <div class="stats-row"><span class="stats-label">Avg score per game</span>       <span class="stats-value" id="st-avg-score">--</span></div>
+    <div class="stats-row"><span class="stats-label">Best score</span>               <span class="stats-value" id="st-best-score">--</span></div>
+
+    <div style="text-align:center; padding: 20px 24px 4px;">
+      <button class="share-btn" onclick="shareStats()">Share Stats! <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+    </div>
+    <p class="stats-note">Stats saved locally on this device. Login coming soon.</p>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 <canvas id="confettiCanvas"></canvas>
 
 <script>
+// =================================================================
+// MENU
+// =================================================================
+function openMenu() {
+  const overlay = document.getElementById('menuOverlay');
+  const panel   = document.getElementById('menuPanel');
+  overlay.classList.add('open');
+  requestAnimationFrame(() => {
+    overlay.classList.add('visible');
+    panel.classList.add('open');
+  });
+}
+function closeMenu() {
+  const overlay = document.getElementById('menuOverlay');
+  const panel   = document.getElementById('menuPanel');
+  overlay.classList.remove('visible');
+  panel.classList.remove('open');
+  setTimeout(() => overlay.classList.remove('open'), 300);
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeMenu(); closeStats(); } });
+
+function menuHome()     { closeMenu(); /* TODO: navigate home */ }
+function menuHelp()     { closeMenu(); /* TODO: show help modal */ }
+function menuStats()    { closeMenu(); setTimeout(openStats, 320); }
+function menuSettings() { closeMenu(); /* TODO: show advanced settings */ }
+
+// =================================================================
+// STATISTICS
+// =================================================================
+const STATS_KEY = 'orijinzStats';
+
+function loadStats() {
+  try { return JSON.parse(localStorage.getItem(STATS_KEY) || '{}'); } catch(e) { return {}; }
+}
+function saveStats(s) {
+  try { localStorage.setItem(STATS_KEY, JSON.stringify(s)); } catch(e) {}
+}
+function getStats() {
+  const s = loadStats();
+  return {
+    gamesPlayed:     s.gamesPlayed     || 0,
+    unfinished:      s.unfinished      || 0,
+    totalReveals:    s.totalReveals    || 0,
+    totalDefs:       s.totalDefs       || 0,
+    totalTime:       s.totalTime       || 0,
+    bestTime:        s.bestTime        !== undefined ? s.bestTime  : null,
+    longestStreak:   s.longestStreak   || 0,
+    pureWins:        s.pureWins        || 0,
+    bestScore:       s.bestScore       !== undefined ? s.bestScore : null,
+    totalScore:      s.totalScore      || 0,
+    totalWrong:      s.totalWrong      || 0,
+    lastPuzzleDate:  s.lastPuzzleDate  || null,
+    lastWasFinished: s.lastWasFinished !== undefined ? s.lastWasFinished : true,
+  };
+}
+
+function recordGameResult(won) {
+  const s = getStats();
+  const todayKey = new Date().toDateString();
+  if (s.lastPuzzleDate && s.lastPuzzleDate !== todayKey && !s.lastWasFinished) {
+    s.unfinished++;
+  }
+  if (won) {
+    const score = elapsedSeconds + (revealCount * 60) + (wrongCount * 10) + (defShown ? 30 : 0);
+    if (s.lastPuzzleDate !== todayKey) s.gamesPlayed++; // one day = one count
+    s.totalReveals  += revealCount;
+    s.totalDefs     += defShown ? 1 : 0;
+    s.totalTime     += elapsedSeconds;
+    s.totalWrong    += wrongCount;
+    s.totalScore    += score;
+    if (s.bestTime  === null || elapsedSeconds < s.bestTime)  s.bestTime  = elapsedSeconds;
+    if (s.bestScore === null || score          < s.bestScore) s.bestScore = score;
+    if (streak > s.longestStreak) s.longestStreak = streak;
+    if (revealCount === 0 && !defShown) s.pureWins++;
+    s.lastWasFinished = true;
+  } else {
+    s.lastWasFinished = false;
+  }
+  s.lastPuzzleDate = todayKey;
+  saveStats(s);
+}
+
+function openStats() {
+  const s      = getStats();
+  const played = s.gamesPlayed;
+
+  const pendingUnfinished = (s.lastPuzzleDate !== new Date().toDateString() && !s.lastWasFinished) ? 1 : 0;
+  const totalUnfinished   = s.unfinished + pendingUnfinished;
+
+  const avgReveals = played > 0 ? (s.totalReveals / played).toFixed(1) : '0.0';
+  const avgTime    = played > 0 ? formatTime(Math.round(s.totalTime / played)) : '0:00';
+  const avgScore   = played > 0 ? Math.round(s.totalScore / played) : '--';
+  const avgWrong   = played > 0 ? (s.totalWrong / played).toFixed(1) : '0.0';
+  const bestTime   = s.bestTime   !== null ? formatTime(s.bestTime)   : '--';
+  const bestScore  = s.bestScore  !== null ? s.bestScore              : '--';
+  const longestStr = Math.max(s.longestStreak, streak);
+
+  document.getElementById('st-played').textContent        = played;
+  document.getElementById('st-streak').textContent        = streak;
+  document.getElementById('st-longest-streak').textContent= longestStr;
+  document.getElementById('st-unfinished').textContent    = totalUnfinished;
+  document.getElementById('st-pure-wins').textContent     = s.pureWins;
+  document.getElementById('st-reveals').textContent       = s.totalReveals;
+  document.getElementById('st-avg-reveals').textContent   = avgReveals;
+  document.getElementById('st-defs').textContent          = s.totalDefs;
+  document.getElementById('st-wrong').textContent         = s.totalWrong;
+  document.getElementById('st-avg-wrong').textContent     = avgWrong;
+  document.getElementById('st-total-time').textContent    = formatTime(s.totalTime);
+  document.getElementById('st-avg-time').textContent      = avgTime;
+  document.getElementById('st-best-time').textContent     = bestTime;
+  document.getElementById('st-avg-score').textContent     = avgScore;
+  document.getElementById('st-best-score').textContent    = bestScore;
+
+  const overlay = document.getElementById('statsOverlay');
+  overlay.classList.add('open');
+  requestAnimationFrame(() => overlay.classList.add('visible'));
+}
+
+function closeStats() {
+  const overlay = document.getElementById('statsOverlay');
+  overlay.classList.remove('visible');
+  setTimeout(() => overlay.classList.remove('open'), 300);
+}
+
+function handleStatsOverlayClick(e) {
+  if (e.target === document.getElementById('statsOverlay')) closeStats();
+}
+
+function shareStats() {
+  const s        = getStats();
+  const played   = s.gamesPlayed;
+  const avgTime  = played > 0 ? formatTime(Math.round(s.totalTime / played)) : '--';
+  const bestTime = s.bestTime  !== null ? formatTime(s.bestTime)  : '--';
+  const bestScore= s.bestScore !== null ? s.bestScore             : '--';
+  const longestStr = Math.max(s.longestStreak, streak);
+
+  const lines = [
+    'Orijinz Daily Words & Phrases \u2014 My Stats \uD83D\uDCCA',
+    '',
+    '\uD83D\uDCC5 Days Played:     ' + played,
+    '\uD83D\uDD25 Current Streak:  ' + streak,
+    '\uD83C\uDFC6 Longest Streak:  ' + longestStr,
+    '\u2B50 Pure Wins:       ' + s.pureWins,
+    '',
+    '\u23F1\uFE0F Best Time:       ' + bestTime,
+    '\u23F1\uFE0F Avg Time:        ' + avgTime,
+    '\uD83C\uDFAF Best Score:      ' + bestScore,
+    '',
+    'https://www.entspire.com/orijinz-daily',
+  ];
+  const text = lines.join('\n');
+  const url  = 'https://www.entspire.com/orijinz-daily';
+
+  if (navigator.share) {
+    navigator.share({ title: 'Orijinz Daily Words & Phrases Stats', text, url })
+      .catch(err => {
+        if (err.name !== 'AbortError')
+          navigator.clipboard.writeText(text).then(() => showToast('Copied! \uD83D\uDCCB', 2000));
+      });
+  } else {
+    navigator.clipboard.writeText(text).then(() => showToast('Copied! \uD83D\uDCCB', 2000));
+  }
+}
+
 // =================================================================
 // DATE OVERRIDES
 // Pin a specific puzzle index to a specific date.
@@ -721,7 +1213,7 @@ const PUZZLES = [{"cat":"phrase","origin":"Likely a simplification of a French p
 // GAME STATE
 // =================================================================
 // Characters that are displayed pre-filled and never typed by the player
-function isAutoFill(ch) { return ch === "'" || ch === '&'; }
+function isAutoFill(ch) { return ch === "'" || ch === '&' || ch === '-'; }
 
 let puzzle, answer, answerClean;
 let currentGuess = [], cursorPos = 0, guesses = [], gameOver = false;
@@ -784,10 +1276,17 @@ function safeSaveState(obj) {
 
 function initGame() {
   const stored = safeGetState();
-  streak      = stored.streak || 0;
   puzzleIndex = (stored.devPuzzleIndex !== undefined) ? stored.devPuzzleIndex : getDayPuzzleIndex();
 
-  const todayKey = new Date().toDateString();
+  const todayKey     = new Date().toDateString();
+  const lastPlayed   = stored.lastPlayed || null;
+  const yesterday    = new Date(Date.now() - 864e5).toDateString();
+  // Streak is valid only if last played today or yesterday; otherwise reset
+  if (lastPlayed === todayKey || lastPlayed === yesterday) {
+    streak = stored.streak || 0;
+  } else {
+    streak = 0;
+  }
   if (stored.lastPlayed === todayKey && stored.guesses) {
     guesses         = stored.guesses;
     revealedLetters = new Set(stored.revealed || []);
@@ -901,12 +1400,21 @@ function updateCurrentInputDisplay() {
   let inputSlot = 0;
   let group = null;
   for (let i = 0; i < answer.length; i++) {
-    if (answer[i] === ' ' || answer[i] === '-') {
+    if (answer[i] === ' ') {
       group = null;
       const s = document.createElement('div');
       s.className   = 'letter-tile space-tile';
-      s.textContent = answer[i] === '-' ? '-' : '\u00B7';
+      s.textContent = '\u00B7';
       display.appendChild(s);
+      continue;
+    }
+    if (answer[i] === '-') {
+      // Hyphen sits between word groups as a pre-filled tile
+      const tile = document.createElement('div');
+      tile.className   = 'letter-tile revealed prefilled-tile';
+      tile.textContent = '-';
+      display.appendChild(tile);
+      group = null;
       continue;
     }
     if (!group) {
@@ -997,6 +1505,7 @@ function handleKey(key) {
 }
 
 function submitGuess() {
+  if (gameOver) return;
   let fullGuess = '', inputIdx = 0;
   for (let i = 0; i < answer.length; i++) {
     if (answer[i] === ' ' || answer[i] === '-' || isAutoFill(answer[i])) continue;
@@ -1022,6 +1531,7 @@ function submitGuess() {
     if (won) {
       gameOver = true;
       streak++;
+      recordGameResult(true);
       updateCurrentInputDisplay();
       launchConfetti();
       setTimeout(() => showResult(true), 600);
@@ -1268,12 +1778,21 @@ function showResult(won) {
   const timeStr = formatTime(elapsedSeconds);
 
   if (won) {
-    const t = guesses.length;
-    if      (t === 1) { emoji.textContent = '\uD83C\uDFC6'; hl.textContent = 'Legendary!'; }
-    else if (t <= 2)  { emoji.textContent = '\uD83C\uDFAF'; hl.textContent = 'Brilliant!'; }
-    else if (t <= 3)  { emoji.textContent = '\u2B50';       hl.textContent = 'Impressive!'; }
-    else if (t <= 4)  { emoji.textContent = '\u2728';       hl.textContent = 'Well done!'; }
-    else              { emoji.textContent = '\uD83D\uDC4F'; hl.textContent = 'You got it!'; }
+    const score = elapsedSeconds + (revealCount * 60) + (wrongCount * 10) + (defShown ? 30 : 0);
+    if      (score < 20)   { emoji.textContent = '\uD83C\uDFC6'; hl.textContent = 'Legendary!'; }
+    else if (score < 40)   { emoji.textContent = '\uD83C\uDF0C'; hl.textContent = 'Otherworldly!'; }
+    else if (score < 70)   { emoji.textContent = '\uD83D\uDD2E'; hl.textContent = 'Uncanny!'; }
+    else if (score < 105)  { emoji.textContent = '\uD83C\uDFAF'; hl.textContent = 'Brilliant!'; }
+    else if (score < 150)  { emoji.textContent = '\uD83D\uDD25'; hl.textContent = 'Epic!'; }
+    else if (score < 200)  { emoji.textContent = '\u2728';       hl.textContent = 'Miraculous!'; }
+    else if (score < 270)  { emoji.textContent = '\uD83C\uDF1F'; hl.textContent = 'Extraordinary!'; }
+    else if (score < 360)  { emoji.textContent = '\u2B50';       hl.textContent = 'Impressive!'; }
+    else if (score < 480)  { emoji.textContent = '\u26A1';       hl.textContent = 'Terrific!'; }
+    else if (score < 630)  { emoji.textContent = '\uD83D\uDC4D'; hl.textContent = 'Well Played!'; }
+    else if (score < 810)  { emoji.textContent = '\uD83D\uDCA1'; hl.textContent = 'Nice Job!'; }
+    else if (score < 1020) { emoji.textContent = '\uD83D\uDCAA'; hl.textContent = 'Tenacious!'; }
+    else if (score < 1320) { emoji.textContent = '\uD83D\uDC4F'; hl.textContent = 'You Got It!'; }
+    else                   { emoji.textContent = '\uD83C\uDF31'; hl.textContent = 'Well Done!'; }
     const revealStr = revealCount > 0 ? ' · ' + revealCount + ' letter' + (revealCount === 1 ? '' : 's') + ' revealed' : '';
     const wrongStr  = wrongCount  > 0 ? ' · ' + wrongCount  + ' letter' + (wrongCount  === 1 ? '' : 's') + ' guessed incorrectly' : '';
     msg.innerHTML = 'Solved in ' + timeStr + revealStr + wrongStr + '.<br>Share the fun with friends!';
@@ -1287,12 +1806,30 @@ function showResult(won) {
     document.getElementById('tidbitText').textContent = puzzle.tidbit;
     document.getElementById('tidbitPanel').classList.add('visible');
   }
+
+  const s = getStats();
+  document.getElementById('rs-played').textContent = s.gamesPlayed;
+  document.getElementById('rs-streak').textContent = streak;
 }
 
 function shareResult() {
-  const timeStr = formatTime(elapsedSeconds);
-  const text = 'Orijinz Daily #' + (puzzleIndex + 1) + ' \u23F1\uFE0F ' + timeStr + '\nhttps://www.entspire.com/orijinz-daily';
-  navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard! \uD83D\uDCCB', 2000));
+  const timeStr  = formatTime(elapsedSeconds);
+  const shareText = 'Orijinz Daily Words & Phrases #' + (puzzleIndex + 1) + ' \u23F1\uFE0F ' + timeStr;
+  const shareUrl  = 'https://www.entspire.com/orijinz-daily';
+
+  if (navigator.share) {
+    navigator.share({ title: 'Orijinz Daily Words & Phrases', text: shareText, url: shareUrl })
+      .catch(err => {
+        // User cancelled — do nothing. Any other error falls back to clipboard.
+        if (err.name !== 'AbortError') {
+          navigator.clipboard.writeText(shareText + '\n' + shareUrl)
+            .then(() => showToast('Copied to clipboard! \uD83D\uDCCB', 2000));
+        }
+      });
+  } else {
+    navigator.clipboard.writeText(shareText + '\n' + shareUrl)
+      .then(() => showToast('Copied to clipboard! \uD83D\uDCCB', 2000));
+  }
 }
 
 // =================================================================
