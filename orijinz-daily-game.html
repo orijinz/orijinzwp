@@ -31,6 +31,8 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
+  html { scrollbar-gutter: stable; }
+
   body {
     background-color: var(--bg);
     background-image:
@@ -292,6 +294,9 @@
 
   /* GUESS HISTORY (kept in DOM, not used in new design) */
   .guess-history { width: 100%; }
+
+  /* GAME ZONE */
+  .game-zone { width: 100%; }
 
   /* KEYBOARD */
   .keyboard {
@@ -715,6 +720,9 @@ const PUZZLES = [{"cat":"phrase","origin":"Likely a simplification of a French p
 // =================================================================
 // GAME STATE
 // =================================================================
+// Characters that are displayed pre-filled and never typed by the player
+function isAutoFill(ch) { return ch === "'" || ch === '&'; }
+
 let puzzle, answer, answerClean;
 let currentGuess = [], cursorPos = 0, guesses = [], gameOver = false;
 let revealedLetters = new Set(), defShown = false, revealCount = 0, wrongCount = 0;
@@ -792,7 +800,7 @@ function initGame() {
 
   puzzle      = PUZZLES[puzzleIndex];
   answer      = puzzle.answer.toUpperCase();
-  answerClean = answer.replace(/[\s-]/g, '');
+  answerClean = answer.replace(/[\s\-'&]/g, '');
 
   const now = new Date();
   document.getElementById('dateBadge').innerHTML =
@@ -906,6 +914,13 @@ function updateCurrentInputDisplay() {
       group.className = 'word-group';
       display.appendChild(group);
     }
+    if (isAutoFill(answer[i])) {
+      const tile = document.createElement('div');
+      tile.className   = 'letter-tile revealed prefilled-tile';
+      tile.textContent = answer[i];
+      group.appendChild(tile);
+      continue;
+    }
     const tile = document.createElement('div');
     tile.className        = 'letter-tile';
     tile.style.transition = '';
@@ -956,7 +971,7 @@ function handleKey(key) {
   if (gameOver) return;
   let available = 0;
   for (let i = 0; i < answer.length; i++) {
-    if (answer[i] !== ' ' && answer[i] !== '-' && !revealedLetters.has(i)) available++;
+    if (answer[i] !== ' ' && answer[i] !== '-' && !isAutoFill(answer[i]) && !revealedLetters.has(i)) available++;
   }
   if (key === '\u232B' || key === 'BACKSPACE') {
     if (cursorPos > 0) {
@@ -984,7 +999,7 @@ function handleKey(key) {
 function submitGuess() {
   let fullGuess = '', inputIdx = 0;
   for (let i = 0; i < answer.length; i++) {
-    if (answer[i] === ' ' || answer[i] === '-') continue;
+    if (answer[i] === ' ' || answer[i] === '-' || isAutoFill(answer[i])) continue;
     fullGuess += revealedLetters.has(i) ? answer[i] : (currentGuess[inputIdx++] || '');
   }
   const available = answerClean.length - revealedLetters.size;
@@ -1014,7 +1029,7 @@ function submitGuess() {
       // Lock correct-position letters so they stay at their exact tile positions
       let slot = 0;
       for (let i = 0; i < answer.length; i++) {
-        if (answer[i] === ' ' || answer[i] === '-') continue;
+        if (answer[i] === ' ' || answer[i] === '-' || isAutoFill(answer[i])) continue;
         if (!revealedLetters.has(i) && states[slot] === 'correct-pos') revealedLetters.add(i);
         slot++;
       }
@@ -1031,7 +1046,7 @@ function submitGuess() {
 // =================================================================
 function animateGuessSubmit(states, won, onComplete) {
   const display  = document.getElementById('currentInputDisplay');
-  const tiles    = [...display.querySelectorAll('.letter-tile:not(.space-tile)')];
+  const tiles    = [...display.querySelectorAll('.letter-tile:not(.space-tile):not(.prefilled-tile)')];
   const FLIP_DUR = 400, STAGGER = 100;
 
   // Use absolute index so stateIdx aligns with states[] (which includes revealed positions)
@@ -1178,13 +1193,13 @@ function revealLetter() {
   let slot = 0;
   const slotMap = {};
   for (let i = 0; i < answer.length; i++) {
-    if (answer[i] === ' ' || answer[i] === '-' || revealedLetters.has(i)) continue;
+    if (answer[i] === ' ' || answer[i] === '-' || isAutoFill(answer[i]) || revealedLetters.has(i)) continue;
     slotMap[i] = slot++;
   }
   // Collect all undetermined positions (not revealed, not already correctly typed)
   const candidates = [];
   for (let i = 0; i < answer.length; i++) {
-    if (answer[i] === ' ' || answer[i] === '-' || revealedLetters.has(i)) continue;
+    if (answer[i] === ' ' || answer[i] === '-' || isAutoFill(answer[i]) || revealedLetters.has(i)) continue;
     if ((currentGuess[slotMap[i]] || '') !== answer[i]) candidates.push(i);
   }
   if (candidates.length === 0) return;
@@ -1211,7 +1226,7 @@ function updateRevealBtn() {
   // Count positions that are neither revealed nor already correctly typed by the user
   let slot = 0, undetermined = 0;
   for (let i = 0; i < answer.length; i++) {
-    if (answer[i] === ' ' || answer[i] === '-' || revealedLetters.has(i)) continue;
+    if (answer[i] === ' ' || answer[i] === '-' || isAutoFill(answer[i]) || revealedLetters.has(i)) continue;
     if ((currentGuess[slot] || '') !== answer[i]) undetermined++;
     slot++;
   }
