@@ -445,6 +445,8 @@
     border: 1px solid rgba(107,79,42,0.3);
     border-radius: 4px;
     display: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
   }
   .result-panel.visible { display: block; }
   .result-emoji    { font-size: 2.5rem; margin-bottom: 8px; }
@@ -1138,6 +1140,12 @@ function showDefinition() {
   document.getElementById('defPanel').classList.add('visible');
   updateDefBtn();
   saveState();
+  if (window.innerWidth <= 480) {
+    setTimeout(() => {
+      const kb = document.getElementById('keyboard');
+      if (kb) kb.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }, 150);
+  }
 }
 
 function updateDefBtn() {
@@ -1202,11 +1210,27 @@ function updateRevealBtn() {
 // =================================================================
 function showResult(won) {
   stopTimer();
-  document.getElementById('keyboard').style.display = 'none';
-  const divider = document.querySelector('.section-divider');
-  if (divider) divider.style.display = 'none';
-  document.getElementById('resultPanel').classList.add('visible');
   document.getElementById('instructionText').style.display = 'none';
+
+  const kb      = document.getElementById('keyboard');
+  const divider = document.querySelector('.section-divider');
+  const rp      = document.getElementById('resultPanel');
+
+  // Fade out keyboard and divider
+  kb.style.transition = 'opacity 0.35s ease';
+  if (divider) divider.style.transition = 'opacity 0.35s ease';
+  kb.style.opacity      = '0';
+  if (divider) divider.style.opacity = '0';
+
+  setTimeout(() => {
+    kb.style.display = 'none';
+    if (divider) divider.style.display = 'none';
+    // Show result panel then fade in
+    rp.classList.add('visible');
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => { rp.style.opacity = '1'; });
+    });
+  }, 350);
 
   const emoji = document.getElementById('resultEmoji');
   const hl    = document.getElementById('resultHeadline');
