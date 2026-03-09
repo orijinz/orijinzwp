@@ -217,9 +217,10 @@
     opacity: 0.5;
   }
   .letter-tile.revealed {
-    background: linear-gradient(160deg, #43BAD0 0%, #1a6e85 100%);
-    border-color: transparent;
+    background: var(--blue);
+    border-color: var(--blue);
     color: #ffffff;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.25), 0 2px 6px rgba(0,0,0,0.35);
   }
   @keyframes tileBounce {
     0%   { transform: translateY(0) scale(1); }
@@ -243,7 +244,7 @@
   .current-input-display.row-shake {
     animation: rowShake 0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97);
   }
-  .letter-tile.correct-pos { background: linear-gradient(160deg, #43BAD0 0%, #1a6e85 100%); border-color: transparent; color: #ffffff; }
+  .letter-tile.correct-pos { background: var(--blue); border-color: var(--blue); color: #ffffff; text-shadow: 0 1px 0 rgba(0,0,0,0.25), 0 2px 6px rgba(0,0,0,0.35); }
   .letter-tile.wrong       { background: var(--wrong); border-color: var(--wrong); color: white; }
   .letter-tile.active {
     border-color: var(--gold);
@@ -1007,11 +1008,13 @@ function animateGuessSubmit(states, won, onComplete) {
         setTimeout(() => {
           const st = states[stateIdx];
           if (isRevealed || st === 'correct-pos') {
-            tile.style.background  = 'linear-gradient(160deg, #43BAD0 0%, #1a6e85 100%)';
-            tile.style.borderColor = 'transparent';
+            tile.style.background  = 'var(--blue)';
+            tile.style.borderColor = 'var(--blue)';
+            tile.style.textShadow  = '0 1px 0 rgba(0,0,0,0.25), 0 2px 6px rgba(0,0,0,0.35)';
           } else {
             tile.style.background  = '#c0392b';
             tile.style.borderColor = '#c0392b';
+            tile.style.textShadow  = '';
           }
           tile.style.color     = 'white';
           tile.style.transform = 'rotateY(0deg)';
