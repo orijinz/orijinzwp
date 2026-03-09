@@ -300,6 +300,11 @@
     flex-direction: column;
     gap: 8px;
     padding: 0 4px;
+    transition: opacity 0.7s ease;
+  }
+  .keyboard.fading {
+    opacity: 0;
+    pointer-events: none;
   }
   .kb-row {
     display: flex;
@@ -437,6 +442,10 @@
   }
 
   /* RESULT PANEL */
+  @keyframes resultFadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
   .result-panel {
     width: 100%;
     text-align: center;
@@ -445,10 +454,11 @@
     border: 1px solid rgba(107,79,42,0.3);
     border-radius: 4px;
     display: none;
-    opacity: 0;
-    transition: opacity 0.5s ease;
   }
-  .result-panel.visible { display: block; }
+  .result-panel.visible {
+    display: block;
+    animation: resultFadeIn 0.9s ease forwards;
+  }
   .result-emoji    { font-size: 2.5rem; margin-bottom: 8px; }
   .result-headline {
     font-family: 'Playfair Display', serif;
@@ -550,6 +560,10 @@
     align-items: center;
     gap: 12px;
     opacity: 0.4;
+    transition: opacity 0.7s ease;
+  }
+  .section-divider.fading {
+    opacity: 0;
   }
   .section-divider::before, .section-divider::after {
     content: '';
@@ -655,13 +669,7 @@
   <!-- Guess history (not used in new design but kept for state compatibility) -->
   <div class="guess-history" id="guessHistory"></div>
 
-  <!-- Keyboard -->
-  <div class="section-divider"><span>keyboard</span></div>
-  <div class="keyboard" id="keyboard"></div>
-
-  </div><!-- end game-zone -->
-
-  <!-- Result panel -->
+  <!-- Result panel (inside game-zone, above keyboard so keyboard removal doesn't shift it) -->
   <div class="result-panel" id="resultPanel">
     <div class="result-emoji" id="resultEmoji">&#x1F389;</div>
     <div class="result-headline" id="resultHeadline">Brilliant!</div>
@@ -673,6 +681,12 @@
       <div class="tidbit-text" id="tidbitText"></div>
     </div>
   </div>
+
+  <!-- Keyboard -->
+  <div class="section-divider"><span>keyboard</span></div>
+  <div class="keyboard" id="keyboard"></div>
+
+  </div><!-- end game-zone -->
 
   <!-- Dev toolbar (only shown on github.io) -->
   <div id="devToolbar" style="display:none; margin-top:18px; display:none; gap:10px; justify-content:center; flex-wrap:wrap;">
@@ -995,7 +1009,7 @@ function submitGuess() {
       streak++;
       updateCurrentInputDisplay();
       launchConfetti();
-      setTimeout(() => showResult(true), 1800);
+      setTimeout(() => showResult(true), 600);
     } else {
       // Lock correct-position letters so they stay at their exact tile positions
       let slot = 0;
@@ -1216,21 +1230,18 @@ function showResult(won) {
   const divider = document.querySelector('.section-divider');
   const rp      = document.getElementById('resultPanel');
 
-  // Fade out keyboard and divider
-  kb.style.transition = 'opacity 0.35s ease';
-  if (divider) divider.style.transition = 'opacity 0.35s ease';
-  kb.style.opacity      = '0';
-  if (divider) divider.style.opacity = '0';
+  // Fade out keyboard + divider (opacity only — no layout shift)
+  kb.classList.add('fading');
+  if (divider) divider.classList.add('fading');
 
+  // Show result panel — animation handles the fade-in
+  rp.classList.add('visible');
+
+  // After result animation finishes, silently remove keyboard from layout
   setTimeout(() => {
     kb.style.display = 'none';
     if (divider) divider.style.display = 'none';
-    // Show result panel then fade in
-    rp.classList.add('visible');
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => { rp.style.opacity = '1'; });
-    });
-  }, 350);
+  }, 1200);
 
   const emoji = document.getElementById('resultEmoji');
   const hl    = document.getElementById('resultHeadline');
