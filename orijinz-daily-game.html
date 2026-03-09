@@ -1019,15 +1019,21 @@ function animateGuessSubmit(states, won, onComplete) {
         tile.style.transition = 'transform 0.2s ease';
         tile.style.transform  = 'rotateY(90deg)';
         setTimeout(() => {
-          tile.style.background  = 'var(--blue)';
-          tile.style.borderColor = 'var(--blue)';
+          tile.style.background  = '#1a7a96';
+          tile.style.borderColor = '#1a7a96';
           tile.style.color       = 'white';
           tile.style.transform   = 'rotateY(0deg)';
         }, FLIP_DUR / 2);
       }, i * STAGGER);
     });
     setTimeout(() => {
-      tileData.forEach(({ tile }, i) => setTimeout(() => tile.classList.add('win-bounce'), i * 80));
+      tileData.forEach(({ tile }, i) => {
+        setTimeout(() => {
+          tile.classList.add('win-bounce');
+          tile.style.transition = 'opacity 0.75s ease 0.2s';
+          tile.style.opacity    = '0';
+        }, i * 80);
+      });
       setTimeout(onComplete, tileData.length * 80 + 700);
     }, totalFlip + 80);
 
