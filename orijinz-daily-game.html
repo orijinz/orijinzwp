@@ -217,9 +217,9 @@
     opacity: 0.5;
   }
   .letter-tile.revealed {
-    background: var(--blue);
-    border-color: var(--blue);
-    color: white;
+    background: linear-gradient(160deg, #43BAD0 0%, #1a6e85 100%);
+    border-color: transparent;
+    color: #ffffff;
   }
   @keyframes tileBounce {
     0%   { transform: translateY(0) scale(1); }
@@ -243,7 +243,7 @@
   .current-input-display.row-shake {
     animation: rowShake 0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97);
   }
-  .letter-tile.correct-pos { background: var(--blue);  border-color: var(--blue);  color: white; }
+  .letter-tile.correct-pos { background: linear-gradient(160deg, #43BAD0 0%, #1a6e85 100%); border-color: transparent; color: #ffffff; }
   .letter-tile.wrong       { background: var(--wrong); border-color: var(--wrong); color: white; }
   .letter-tile.active {
     border-color: var(--gold);
@@ -1005,13 +1005,13 @@ function animateGuessSubmit(states, won, onComplete) {
         tile.style.transition = 'transform 0.2s ease';
         tile.style.transform  = 'rotateY(90deg)';
         setTimeout(() => {
-          if (isRevealed) {
-            tile.style.background  = 'var(--blue)';
-            tile.style.borderColor = 'var(--blue)';
+          const st = states[stateIdx];
+          if (isRevealed || st === 'correct-pos') {
+            tile.style.background  = 'linear-gradient(160deg, #43BAD0 0%, #1a6e85 100%)';
+            tile.style.borderColor = 'transparent';
           } else {
-            const st = states[stateIdx];
-            tile.style.background  = st === 'correct-pos' ? 'var(--blue)' : '#c0392b';
-            tile.style.borderColor = st === 'correct-pos' ? 'var(--blue)' : '#c0392b';
+            tile.style.background  = '#c0392b';
+            tile.style.borderColor = '#c0392b';
           }
           tile.style.color     = 'white';
           tile.style.transform = 'rotateY(0deg)';
