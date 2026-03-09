@@ -592,35 +592,8 @@
     .kb-key.wide { font-size: 0.68rem; }
     .origin-card { padding: 18px 18px; max-height: 200px; overflow-y: auto; }
     .date-badge  { display: none; }
-    main         { gap: 14px; padding: 16px 8px 0; }
+    main         { gap: 14px; padding: 16px 8px 32px; }
     .clue-btn    { padding: 9px 14px; font-size: 0.65rem; }
-    .section-divider { display: none; }
-    #gameZone {
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      background: #0b1a26;
-      border-top: 1px solid #1c3445;
-      padding: 10px 10px 16px;
-      z-index: 100;
-      box-shadow: 0 -6px 24px rgba(0,0,0,0.5);
-    }
-    #gameZone.game-over {
-      position: static;
-      box-shadow: none;
-      border-top: none;
-      padding: 0;
-    }
-    #gameZone .input-section {
-      margin-bottom: 8px;
-    }
-    #gameZone .instruction {
-      font-size: 0.6rem;
-      margin-bottom: 6px;
-    }
-    #gameZone .timer-display {
-      margin-top: 4px;
-      font-size: 0.8rem;
-    }
   }
 </style>
 </head>
@@ -833,6 +806,12 @@ function initGame() {
   updateRevealBtn();
   updateDefBtn();
   initDevTap();
+  if (!gameOver && window.innerWidth <= 480) {
+    setTimeout(() => {
+      const kb = document.getElementById('keyboard');
+      if (kb) kb.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }, 400);
+  }
 }
 
 function saveState() {
@@ -1224,7 +1203,6 @@ function updateRevealBtn() {
 function showResult(won) {
   stopTimer();
   document.getElementById('keyboard').style.display = 'none';
-  document.getElementById('gameZone').classList.add('game-over');
   const divider = document.querySelector('.section-divider');
   if (divider) divider.style.display = 'none';
   document.getElementById('resultPanel').classList.add('visible');
