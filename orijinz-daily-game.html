@@ -246,6 +246,27 @@
   }
   .letter-tile.correct-pos { background: #1a7a96; border-color: #1a7a96; color: #ffffff; text-shadow: none; }
   .letter-tile.wrong       { background: var(--wrong); border-color: var(--wrong); color: white; }
+  .answer-reveal {
+    display: flex; justify-content: center; align-items: center;
+    padding: 10px 0; width: 100%;
+    animation: revealFadeIn 0.6s ease forwards;
+  }
+  @keyframes revealFadeIn {
+    from { opacity: 0; transform: scale(0.85); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  .answer-reveal-text {
+    font-family: 'Nunito', sans-serif;
+    font-size: clamp(1.4rem, 7vw, 2.6rem);
+    font-weight: 900;
+    background: linear-gradient(90deg, #7FCEDB, #e8f6ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 0.04em;
+    text-align: center;
+    line-height: 1.2;
+  }
   .letter-tile.active {
     border-color: var(--gold);
     background: rgba(200,146,42,0.08);
@@ -832,6 +853,16 @@ function fitWordGroups() {
 function updateCurrentInputDisplay() {
   const display = document.getElementById('currentInputDisplay');
   display.innerHTML = '';
+  if (gameOver) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'answer-reveal';
+    const text = document.createElement('div');
+    text.className = 'answer-reveal-text';
+    text.textContent = answer.replace(/-/g, '\u2011'); // non-breaking hyphen
+    wrapper.appendChild(text);
+    display.appendChild(wrapper);
+    return;
+  }
   let inputSlot = 0;
   let group = null;
   for (let i = 0; i < answer.length; i++) {
