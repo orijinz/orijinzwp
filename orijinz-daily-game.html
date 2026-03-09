@@ -588,21 +588,38 @@
 
   /* RESPONSIVE */
   @media (max-width: 480px) {
-    .kb-key      { height: 52px; font-size: 0.88rem; }
-    .kb-key.wide { font-size: 0.7rem; }
-    .origin-card { padding: 18px 18px; max-height: 230px; overflow-y: auto; }
+    .kb-key      { height: 46px; font-size: 0.82rem; }
+    .kb-key.wide { font-size: 0.68rem; }
+    .origin-card { padding: 18px 18px; max-height: 200px; overflow-y: auto; }
     .date-badge  { display: none; }
-    main         { gap: 18px; padding: 20px 8px 210px; }
+    main         { gap: 14px; padding: 16px 8px 0; }
     .clue-btn    { padding: 9px 14px; font-size: 0.65rem; }
     .section-divider { display: none; }
-    #keyboard {
+    #gameZone {
       position: fixed;
       bottom: 0; left: 0; right: 0;
       background: #0b1a26;
       border-top: 1px solid #1c3445;
-      padding: 10px 10px 18px;
+      padding: 10px 10px 16px;
       z-index: 100;
-      box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
+      box-shadow: 0 -6px 24px rgba(0,0,0,0.5);
+    }
+    #gameZone.game-over {
+      position: static;
+      box-shadow: none;
+      border-top: none;
+      padding: 0;
+    }
+    #gameZone .input-section {
+      margin-bottom: 8px;
+    }
+    #gameZone .instruction {
+      font-size: 0.6rem;
+      margin-bottom: 6px;
+    }
+    #gameZone .timer-display {
+      margin-top: 4px;
+      font-size: 0.8rem;
     }
   }
 </style>
@@ -650,6 +667,9 @@
     </button>
   </div>
 
+  <!-- Game zone: tiles + keyboard fixed together on mobile -->
+  <div class="game-zone" id="gameZone">
+
   <!-- Current input display -->
   <div class="input-section">
     <p class="instruction" id="instructionText">Type your guess using the keyboard below</p>
@@ -659,6 +679,12 @@
 
   <!-- Guess history (not used in new design but kept for state compatibility) -->
   <div class="guess-history" id="guessHistory"></div>
+
+  <!-- Keyboard -->
+  <div class="section-divider"><span>keyboard</span></div>
+  <div class="keyboard" id="keyboard"></div>
+
+  </div><!-- end game-zone -->
 
   <!-- Result panel -->
   <div class="result-panel" id="resultPanel">
@@ -672,10 +698,6 @@
       <div class="tidbit-text" id="tidbitText"></div>
     </div>
   </div>
-
-  <!-- Keyboard -->
-  <div class="section-divider"><span>keyboard</span></div>
-  <div class="keyboard" id="keyboard"></div>
 
   <!-- Dev toolbar (only shown on github.io) -->
   <div id="devToolbar" style="display:none; margin-top:18px; display:none; gap:10px; justify-content:center; flex-wrap:wrap;">
@@ -1201,6 +1223,10 @@ function updateRevealBtn() {
 // =================================================================
 function showResult(won) {
   stopTimer();
+  document.getElementById('keyboard').style.display = 'none';
+  document.getElementById('gameZone').classList.add('game-over');
+  const divider = document.querySelector('.section-divider');
+  if (divider) divider.style.display = 'none';
   document.getElementById('resultPanel').classList.add('visible');
   document.getElementById('instructionText').style.display = 'none';
 
