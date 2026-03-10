@@ -1902,12 +1902,12 @@ function submitGuess() {
   const won    = fullGuess === answerClean;
 
   wrongCount += states.filter((st, i) => st === 'wrong' && !revealedLetters.has(i)).length;
+  if (won) { gameOver = true; stopTimer(); }
   animateGuessSubmit(states, won, () => {
     guesses.push({ word: fullGuess, states });
     currentGuess = []; cursorPos = 0;
 
     if (won) {
-      gameOver = true;
       streak++;
       recordGameResult(true);
       updateCurrentInputDisplay();
