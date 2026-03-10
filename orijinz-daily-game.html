@@ -25,8 +25,8 @@
     --red:           #e05252;
     --white:         #ffffff;
     --wrong:         var(--grey);
-    --letter-bg:     var(--bg3);
-    --letter-border: var(--border);
+    --letter-bg:     #132d42;
+    --letter-border: #2e5570;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -206,7 +206,7 @@
     color: var(--white);
     transition: all 0.15s ease;
     position: relative;
-    box-shadow: 0 2px 4px rgba(26,18,8,0.06);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
     user-select: none;
   }
   .letter-tile.space-tile {
@@ -1053,7 +1053,20 @@
   @media (max-width: 480px) {
     .kb-key      { height: 46px; font-size: 0.82rem; }
     .kb-key.wide { font-size: 0.68rem; }
-    .origin-card { padding: 18px 18px; max-height: 200px; overflow-y: auto; }
+    .origin-card { padding: 18px 18px; max-height: 200px; overflow-y: auto; scroll-behavior: smooth; }
+    .origin-card.has-overflow::after {
+      content: '';
+      position: sticky;
+      bottom: 0;
+      left: 0;
+      display: block;
+      height: 48px;
+      margin-top: -48px;
+      background: linear-gradient(to bottom, transparent, var(--panel));
+      pointer-events: none;
+      border-radius: 0 0 8px 8px;
+    }
+    .origin-card.scrolled-end::after { display: none; }
     .date-badge  { display: none; }
     main         { gap: 14px; padding: 16px 8px 32px; }
     .clue-btn    { padding: 9px 14px; font-size: 0.65rem; }
@@ -1685,6 +1698,24 @@ function initGame() {
   document.getElementById('puzzleNum').textContent = 'Puzzle #' + (puzzleIndex + 1);
   document.getElementById('originText').textContent = puzzle.origin;
 
+  // Scroll indicator for mobile origin card
+  const originCard = document.querySelector('.origin-card');
+  if (originCard) {
+    const checkOverflow = () => {
+      if (originCard.scrollHeight > originCard.clientHeight + 4) {
+        originCard.classList.add('has-overflow');
+      } else {
+        originCard.classList.remove('has-overflow');
+      }
+    };
+    const checkScrollEnd = () => {
+      const atEnd = originCard.scrollTop + originCard.clientHeight >= originCard.scrollHeight - 8;
+      originCard.classList.toggle('scrolled-end', atEnd);
+    };
+    setTimeout(checkOverflow, 50);
+    originCard.addEventListener('scroll', checkScrollEnd, { passive: true });
+  }
+
   const badge = document.getElementById('categoryBadge');
   badge.textContent = CAT_LABELS[puzzle.cat] || puzzle.cat;
   badge.className   = 'category-badge ' + (CAT_CLASSES[puzzle.cat] || '');
@@ -1716,10 +1747,12 @@ function initGame() {
 }
 
 function saveState() {
+  const existing = safeGetState();
   safeSaveState({
     streak, lastPlayed: new Date().toDateString(),
     guesses, revealed: [...revealedLetters],
-    defShown, revealCount, wrongCount, gameOver, elapsed: elapsedSeconds
+    defShown, revealCount, wrongCount, gameOver, elapsed: elapsedSeconds,
+    ...(existing.devPuzzleIndex !== undefined ? { devPuzzleIndex: existing.devPuzzleIndex } : {})
   });
 }
 
@@ -2229,7 +2262,7 @@ function showToast(msg, duration) {
 // Desktop: Ctrl+] = next, Ctrl+[ = reset
 // Mobile: triple-tap puzzle number = next, long-press = reset
 // =================================================================
-function devReset() { try { localStorage.removeItem('orijinzState'); } catch(e) {} location.href = location.pathname; }
+function devReset() { try { localStorage.removeItem('orijinzState'); } catch(e) {} location.reload(); }
 function devNext() {
   const state = safeGetState();
   safeSaveState({
@@ -2238,7 +2271,7 @@ function devNext() {
     lastPlayed: null, guesses: [], revealed: [],
     defShown: false, revealCount: 0, wrongCount: 0, gameOver: false, elapsed: 0
   });
-  location.href = location.pathname;
+  location.reload();
 }
 function devGoTo(n) {
   const idx = Math.max(0, Math.min(n - 1, PUZZLES.length - 1));
@@ -2249,7 +2282,7 @@ function devGoTo(n) {
     lastPlayed: null, guesses: [], revealed: [],
     defShown: false, revealCount: 0, wrongCount: 0, gameOver: false, elapsed: 0
   });
-  location.href = location.pathname;
+  location.reload();
 }
 // Handle URL parameters
 try {
