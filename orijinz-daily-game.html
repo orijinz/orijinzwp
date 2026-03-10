@@ -1053,17 +1053,20 @@
   @media (max-width: 480px) {
     .kb-key      { height: 46px; font-size: 0.82rem; }
     .kb-key.wide { font-size: 0.68rem; }
-    .origin-card {
-      padding: 18px 18px;
-      max-height: 200px;
-      overflow-y: auto;
-      scroll-behavior: smooth;
-      scrollbar-width: thin;
-      scrollbar-color: var(--blue) transparent;
+    .origin-card { padding: 18px 18px; max-height: 200px; overflow-y: auto; scroll-behavior: smooth; scrollbar-width: none; }
+    .origin-card::-webkit-scrollbar { display: none; }
+    .origin-card-wrap { position: relative; }
+    .origin-card-wrap::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 44px;
+      background: linear-gradient(to bottom, transparent, #0d1e2e);
+      border-radius: 0 0 8px 8px;
+      pointer-events: none;
+      transition: opacity 0.3s;
     }
-    .origin-card::-webkit-scrollbar { width: 4px; }
-    .origin-card::-webkit-scrollbar-track { background: transparent; }
-    .origin-card::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 99px; }
+    .origin-card-wrap.scrolled-end::after { opacity: 0; }
     .date-badge  { display: none; }
     main         { gap: 14px; padding: 16px 8px 32px; }
     .clue-btn    { padding: 9px 14px; font-size: 0.65rem; }
@@ -1119,12 +1122,14 @@
   </div>
 
   <!-- Origin Card -->
-  <div class="origin-card">
-    <div class="origin-card-header">
-      <div class="origin-label">Today's Origin</div>
-      <div class="category-badge" id="categoryBadge"></div>
+  <div class="origin-card-wrap" id="originCardWrap">
+    <div class="origin-card" id="originCard">
+      <div class="origin-card-header">
+        <div class="origin-label">Today's Origin</div>
+        <div class="category-badge" id="categoryBadge"></div>
+      </div>
+      <div class="origin-text" id="originText">Loading today's puzzle...</div>
     </div>
-    <div class="origin-text" id="originText">Loading today's puzzle...</div>
   </div>
 
   <!-- Definition clue panel -->
@@ -1695,6 +1700,18 @@ function initGame() {
     now.toLocaleDateString('en-US', {month:'short', day:'numeric'}) + '<br>' + now.getFullYear();
   document.getElementById('puzzleNum').textContent = 'Puzzle #' + (puzzleIndex + 1);
   document.getElementById('originText').textContent = puzzle.origin;
+
+  const originCard = document.getElementById('originCard');
+  const originWrap = document.getElementById('originCardWrap');
+  if (originCard && originWrap) {
+    const updateFade = () => {
+      const overflows = originCard.scrollHeight > originCard.clientHeight + 4;
+      const atEnd = originCard.scrollTop + originCard.clientHeight >= originCard.scrollHeight - 8;
+      originWrap.classList.toggle('scrolled-end', !overflows || atEnd);
+    };
+    setTimeout(updateFade, 80);
+    originCard.addEventListener('scroll', updateFade, { passive: true });
+  }
 
   const badge = document.getElementById('categoryBadge');
   badge.textContent = CAT_LABELS[puzzle.cat] || puzzle.cat;
