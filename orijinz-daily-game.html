@@ -1054,22 +1054,29 @@
     .kb-key      { height: 46px; font-size: 0.82rem; }
     .kb-key.wide { font-size: 0.68rem; }
     .origin-card { padding: 18px 18px; max-height: 200px; overflow-y: auto; scroll-behavior: smooth; }
-    .origin-card.has-overflow::after {
-      content: '';
-      position: sticky;
-      bottom: 0;
-      left: 0;
-      display: block;
-      height: 48px;
-      margin-top: -48px;
-      background: linear-gradient(to bottom, transparent, var(--panel));
-      pointer-events: none;
-      border-radius: 0 0 8px 8px;
+    .scroll-hint {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      margin-top: 6px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      opacity: 0.85;
+      animation: scrollPulse 1.4s ease-in-out infinite;
     }
-    .origin-card.scrolled-end::after { display: none; }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.5; transform: translateY(0); }
+      50%       { opacity: 1;   transform: translateY(2px); }
+    }
+    .origin-card.has-overflow ~ .scroll-hint { display: flex; }
+    .origin-card.scrolled-end ~ .scroll-hint { display: none; }
     .date-badge  { display: none; }
     main         { gap: 14px; padding: 16px 8px 32px; }
     .clue-btn    { padding: 9px 14px; font-size: 0.65rem; }
+    .keyboard    { padding-bottom: env(safe-area-inset-bottom, 12px); }
   }
 </style>
 </head>
@@ -1128,6 +1135,7 @@
     </div>
     <div class="origin-text" id="originText">Loading today's puzzle...</div>
   </div>
+  <div class="scroll-hint">&#9660; scroll to read more &#9660;</div>
 
   <!-- Definition clue panel -->
   <div class="definition-panel" id="defPanel">
