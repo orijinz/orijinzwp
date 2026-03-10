@@ -1053,26 +1053,17 @@
   @media (max-width: 480px) {
     .kb-key      { height: 46px; font-size: 0.82rem; }
     .kb-key.wide { font-size: 0.68rem; }
-    .origin-card { padding: 18px 18px; max-height: 200px; overflow-y: auto; scroll-behavior: smooth; }
-    .scroll-hint {
-      display: none;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      margin-top: 6px;
-      font-family: 'Space Mono', monospace;
-      font-size: 0.6rem;
-      letter-spacing: 0.1em;
-      color: var(--gold);
-      opacity: 0.85;
-      animation: scrollPulse 1.4s ease-in-out infinite;
+    .origin-card {
+      padding: 18px 18px;
+      max-height: 200px;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: var(--blue) transparent;
     }
-    @keyframes scrollPulse {
-      0%, 100% { opacity: 0.5; transform: translateY(0); }
-      50%       { opacity: 1;   transform: translateY(2px); }
-    }
-    .origin-card.has-overflow ~ .scroll-hint { display: flex; }
-    .origin-card.scrolled-end ~ .scroll-hint { display: none; }
+    .origin-card::-webkit-scrollbar { width: 4px; }
+    .origin-card::-webkit-scrollbar-track { background: transparent; }
+    .origin-card::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 99px; }
     .date-badge  { display: none; }
     main         { gap: 14px; padding: 16px 8px 32px; }
     .clue-btn    { padding: 9px 14px; font-size: 0.65rem; }
@@ -1135,7 +1126,6 @@
     </div>
     <div class="origin-text" id="originText">Loading today's puzzle...</div>
   </div>
-  <div class="scroll-hint">&#9660; scroll to read more &#9660;</div>
 
   <!-- Definition clue panel -->
   <div class="definition-panel" id="defPanel">
@@ -1705,24 +1695,6 @@ function initGame() {
     now.toLocaleDateString('en-US', {month:'short', day:'numeric'}) + '<br>' + now.getFullYear();
   document.getElementById('puzzleNum').textContent = 'Puzzle #' + (puzzleIndex + 1);
   document.getElementById('originText').textContent = puzzle.origin;
-
-  // Scroll indicator for mobile origin card
-  const originCard = document.querySelector('.origin-card');
-  if (originCard) {
-    const checkOverflow = () => {
-      if (originCard.scrollHeight > originCard.clientHeight + 4) {
-        originCard.classList.add('has-overflow');
-      } else {
-        originCard.classList.remove('has-overflow');
-      }
-    };
-    const checkScrollEnd = () => {
-      const atEnd = originCard.scrollTop + originCard.clientHeight >= originCard.scrollHeight - 8;
-      originCard.classList.toggle('scrolled-end', atEnd);
-    };
-    setTimeout(checkOverflow, 50);
-    originCard.addEventListener('scroll', checkScrollEnd, { passive: true });
-  }
 
   const badge = document.getElementById('categoryBadge');
   badge.textContent = CAT_LABELS[puzzle.cat] || puzzle.cat;
