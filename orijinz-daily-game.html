@@ -856,6 +856,199 @@
     text-align: center;
   }
 
+  /* LEADERBOARD MODAL */
+  .lb-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 300;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    align-items: center;
+    justify-content: center;
+  }
+  .lb-overlay.open    { display: flex; }
+  .lb-overlay.visible { opacity: 1; }
+
+  .lb-panel {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    width: min(500px, 94vw);
+    max-height: 88vh;
+    overflow-y: auto;
+    padding: 0 0 24px;
+    transform: translateY(16px);
+    transition: transform 0.3s ease;
+  }
+  .lb-overlay.visible .lb-panel { transform: translateY(0); }
+
+  .lb-rubric {
+    background: rgba(22,44,58,0.7);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 20px 16px;
+  }
+  .lb-rubric-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  .lb-rubric-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(7, auto);
+    grid-auto-flow: column;
+    gap: 4px 16px;
+  }
+  .lb-rubric-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    font-family: 'Nunito Sans', sans-serif;
+  }
+  .lb-rubric-row span:last-child {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text);
+  }
+  .lb-rubric-penalty {
+    margin-top: 10px;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-style: italic;
+    font-family: 'Nunito Sans', sans-serif;
+  }
+
+  .lb-entry-form {
+    padding: 16px 20px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .lb-entry-form-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 2px;
+  }
+  .lb-input-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .lb-input {
+    flex: 1;
+    min-width: 100px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 0.86rem;
+    padding: 8px 12px;
+    outline: none;
+  }
+  .lb-input:focus { border-color: var(--blue); }
+  .lb-input::placeholder { color: var(--text-muted); opacity: 0.5; }
+  .lb-submit-btn {
+    -webkit-appearance: none;
+    appearance: none;
+    padding: 8px 20px;
+    background: var(--blue);
+    color: var(--bg);
+    border: none;
+    border-radius: 6px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+  .lb-submit-btn:hover { background: var(--blue-light); }
+
+  .lb-list-header {
+    display: flex;
+    padding: 10px 20px 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border-bottom: 1px solid var(--border);
+    gap: 8px;
+  }
+  .lb-col-rank  { width: 28px; text-align: center; flex-shrink: 0; }
+  .lb-col-name  { flex: 1; }
+  .lb-col-loc   { width: 110px; flex-shrink: 0; }
+  .lb-col-score { width: 56px; text-align: right; flex-shrink: 0; }
+  .lb-col-tier  { width: 28px; text-align: center; flex-shrink: 0; }
+
+  .lb-row {
+    display: flex;
+    align-items: center;
+    padding: 11px 20px;
+    gap: 8px;
+    border-bottom: 1px solid rgba(28,52,69,0.5);
+    font-size: 0.86rem;
+    transition: background 0.12s;
+  }
+  .lb-row:last-child { border-bottom: none; }
+  .lb-row.lb-mine { background: rgba(67,186,208,0.08); }
+  .lb-row-rank  { width: 28px; text-align: center; flex-shrink: 0; font-family: 'Space Mono', monospace; font-size: 0.72rem; color: var(--text-muted); }
+  .lb-row-name  { flex: 1; font-family: 'Nunito Sans', sans-serif; color: var(--text); font-weight: 600; }
+  .lb-row-loc   { width: 110px; flex-shrink: 0; font-family: 'Nunito Sans', sans-serif; color: var(--text-muted); font-size: 0.78rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .lb-row-score { width: 56px; text-align: right; flex-shrink: 0; font-family: 'Space Mono', monospace; font-size: 0.82rem; font-weight: 700; color: var(--blue); }
+  .lb-row-tier  { width: 28px; text-align: center; flex-shrink: 0; font-size: 1rem; }
+  .lb-empty {
+    padding: 28px 20px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.86rem;
+    font-style: italic;
+    font-family: 'Nunito Sans', sans-serif;
+  }
+
+  /* result-actions row */
+  .result-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+  }
+  .results-btn {
+    -webkit-appearance: none;
+    appearance: none;
+    padding: 10px 22px;
+    background: transparent;
+    color: var(--blue);
+    border: 2px solid var(--blue);
+    border-radius: 999px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .results-btn:hover {
+    background: rgba(67,186,208,0.12);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(67,186,208,0.2);
+  }
+
   /* RESPONSIVE */
   @media (max-width: 480px) {
     .kb-key      { height: 46px; font-size: 0.82rem; }
@@ -970,7 +1163,10 @@
         <span class="result-stat-label">Streak</span>
       </div>
     </div>
-    <button class="share-btn" onclick="shareResult()">Share! <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+    <div class="result-actions">
+      <button class="share-btn" onclick="shareResult()">Share! <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+      <button class="results-btn" onclick="openLeaderboard()">See Results <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></button>
+    </div>
     <div class="tidbit-panel" id="tidbitPanel">
       <div class="tidbit-label">Did you know?</div>
       <div class="tidbit-text" id="tidbitText"></div>
@@ -1029,6 +1225,62 @@
   </div>
 </div>
 
+<!-- Leaderboard modal -->
+<div class="lb-overlay" id="lbOverlay" onclick="handleLbOverlayClick(event)">
+  <div class="lb-panel" id="lbPanel">
+    <div class="stats-panel-header">
+      <span class="stats-title">Today&#39;s Results</span>
+      <button class="stats-close" onclick="closeLeaderboard()">&#x2715;</button>
+    </div>
+
+    <!-- Scoring rubric -->
+    <div class="lb-rubric">
+      <div class="lb-rubric-title">Scoring &mdash; Lower is Better</div>
+      <div class="lb-rubric-penalty" style="margin-bottom:10px; margin-top:0; font-style:normal; color:var(--text-muted);">Your score = Your time + 60 seconds per letter revealed + 10 seconds per wrong letter + 30 seconds for using the definition</div>
+      <div class="lb-rubric-grid">
+        <div class="lb-rubric-row"><span>🏆 Legendary</span><span>&lt; 20</span></div>
+        <div class="lb-rubric-row"><span>🌌 Otherworldly</span><span>&lt; 40</span></div>
+        <div class="lb-rubric-row"><span>🔮 Uncanny</span><span>&lt; 60</span></div>
+        <div class="lb-rubric-row"><span>🎯 Brilliant</span><span>&lt; 90</span></div>
+        <div class="lb-rubric-row"><span>🔥 Epic</span><span>&lt; 120</span></div>
+        <div class="lb-rubric-row"><span>✨ Miraculous</span><span>&lt; 150</span></div>
+        <div class="lb-rubric-row"><span>🌟 Extraordinary</span><span>&lt; 180</span></div>
+        <div class="lb-rubric-row"><span>⭐ Impressive</span><span>&lt; 210</span></div>
+        <div class="lb-rubric-row"><span>⚡ Terrific</span><span>&lt; 240</span></div>
+        <div class="lb-rubric-row"><span>💪 Tenacious</span><span>&lt; 270</span></div>
+        <div class="lb-rubric-row"><span>👍 Well Played</span><span>&lt; 300</span></div>
+        <div class="lb-rubric-row"><span>💡 Nice Job</span><span>&lt; 360</span></div>
+        <div class="lb-rubric-row"><span>👏 Solid Work</span><span>&lt; 420</span></div>
+        <div class="lb-rubric-row"><span>🌱 You Got It</span><span>420+</span></div>
+      </div>
+    </div>
+
+    <!-- Name entry form -->
+    <div class="lb-entry-form" id="lbEntryForm">
+      <div class="lb-entry-form-title">Add your Name (Optional)</div>
+      <div class="lb-input-row">
+        <input class="lb-input" id="lbName"    type="text" placeholder="Name"              maxlength="32" autocomplete="off">
+        <input class="lb-input" id="lbCity"    type="text" placeholder="City"               maxlength="32" autocomplete="off">
+        <input class="lb-input" id="lbCountry" type="text" placeholder="Country"            maxlength="32" autocomplete="off">
+      </div>
+      <div style="display:flex; justify-content:flex-end;">
+        <button class="lb-submit-btn" onclick="submitLeaderboardEntry()">Submit Score</button>
+      </div>
+    </div>
+
+    <!-- Leaderboard list -->
+    <div class="lb-list-header">
+      <span class="lb-col-rank">#</span>
+      <span class="lb-col-name">Player</span>
+      <span class="lb-col-loc">Location</span>
+      <span class="lb-col-score">Score</span>
+      <span class="lb-col-tier"></span>
+    </div>
+    <div id="lbList"></div>
+    <p class="stats-note">Results saved on this device. Global leaderboard coming with player accounts.</p>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 <canvas id="confettiCanvas"></canvas>
 
@@ -1052,7 +1304,7 @@ function closeMenu() {
   panel.classList.remove('open');
   setTimeout(() => overlay.classList.remove('open'), 300);
 }
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeMenu(); closeStats(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeMenu(); closeStats(); closeLeaderboard(); } });
 
 function menuHome()     { closeMenu(); /* TODO: navigate home */ }
 function menuHelp()     { closeMenu(); /* TODO: show help modal */ }
@@ -1198,6 +1450,118 @@ function shareStats() {
 }
 
 // =================================================================
+// LEADERBOARD
+// =================================================================
+const LB_KEY = 'orijinzLeaderboard';
+
+function lbTierEmoji(score) {
+  if      (score < 20)  return '\uD83C\uDFC6';
+  else if (score < 40)  return '\uD83C\uDF0C';
+  else if (score < 60)  return '\uD83D\uDD2E';
+  else if (score < 90)  return '\uD83C\uDFAF';
+  else if (score < 120) return '\uD83D\uDD25';
+  else if (score < 150) return '\u2728';
+  else if (score < 180) return '\uD83C\uDF1F';
+  else if (score < 210) return '\u2B50';
+  else if (score < 240) return '\u26A1';
+  else if (score < 270) return '\uD83D\uDCAA';
+  else if (score < 300) return '\uD83D\uDC4D';
+  else if (score < 360) return '\uD83D\uDCA1';
+  else if (score < 420) return '\uD83D\uDC4F';
+  else                  return '\uD83C\uDF31';
+}
+
+function getLbData() {
+  try { return JSON.parse(localStorage.getItem(LB_KEY) || '{}'); } catch(e) { return {}; }
+}
+function saveLbData(d) {
+  try { localStorage.setItem(LB_KEY, JSON.stringify(d)); } catch(e) {}
+}
+
+function openLeaderboard() {
+  const overlay = document.getElementById('lbOverlay');
+  overlay.classList.add('open');
+  requestAnimationFrame(() => overlay.classList.add('visible'));
+  renderLeaderboard();
+}
+function closeLeaderboard() {
+  const overlay = document.getElementById('lbOverlay');
+  overlay.classList.remove('visible');
+  setTimeout(() => overlay.classList.remove('open'), 300);
+}
+function handleLbOverlayClick(e) {
+  if (e.target === document.getElementById('lbOverlay')) closeLeaderboard();
+}
+
+function submitLeaderboardEntry() {
+  const name    = document.getElementById('lbName').value.trim()    || 'Anonymous';
+  const city    = document.getElementById('lbCity').value.trim()    || '';
+  const country = document.getElementById('lbCountry').value.trim() || '';
+  const score   = elapsedSeconds + (revealCount * 60) + (wrongCount * 10) + (defShown ? 30 : 0);
+  const todayKey = new Date().toDateString();
+  const puzzleKey = 'puzzle_' + puzzleIndex;
+
+  const d = getLbData();
+  if (!d[puzzleKey]) d[puzzleKey] = { date: todayKey, entries: [] };
+
+  // Replace existing entry for this device/puzzle if already submitted
+  const deviceId = getDeviceId();
+  d[puzzleKey].entries = d[puzzleKey].entries.filter(e => e.deviceId !== deviceId);
+  d[puzzleKey].entries.push({ name, city, country, score, deviceId });
+  saveLbData(d);
+
+  // Hide form after submit
+  document.getElementById('lbEntryForm').style.display = 'none';
+  renderLeaderboard();
+  showToast('Score submitted! \uD83C\uDFC6', 2000);
+}
+
+function getDeviceId() {
+  let id = localStorage.getItem('orijinzDeviceId');
+  if (!id) {
+    id = Math.random().toString(36).slice(2) + Date.now().toString(36);
+    localStorage.setItem('orijinzDeviceId', id);
+  }
+  return id;
+}
+
+function renderLeaderboard() {
+  const puzzleKey = 'puzzle_' + puzzleIndex;
+  const d = getLbData();
+  const entries = (d[puzzleKey] && d[puzzleKey].entries) ? [...d[puzzleKey].entries] : [];
+  entries.sort((a, b) => a.score - b.score);
+
+  const deviceId = getDeviceId();
+  const list = document.getElementById('lbList');
+  const form = document.getElementById('lbEntryForm');
+
+  // Show form only if player hasn't submitted yet
+  const alreadySubmitted = entries.some(e => e.deviceId === deviceId);
+  form.style.display = alreadySubmitted ? 'none' : '';
+
+  if (entries.length === 0) {
+    list.innerHTML = '<div class="lb-empty">No results yet — be the first to submit!</div>';
+    return;
+  }
+
+  list.innerHTML = entries.map((e, i) => {
+    const loc = [e.city, e.country].filter(Boolean).join(', ');
+    const mine = e.deviceId === deviceId ? ' lb-mine' : '';
+    return '<div class="lb-row' + mine + '">' +
+      '<span class="lb-row-rank">' + (i + 1) + '</span>' +
+      '<span class="lb-row-name">' + escHtml(e.name) + '</span>' +
+      '<span class="lb-row-loc">'  + escHtml(loc)    + '</span>' +
+      '<span class="lb-row-score">' + e.score         + '</span>' +
+      '<span class="lb-row-tier">'  + lbTierEmoji(e.score) + '</span>' +
+      '</div>';
+  }).join('');
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// =================================================================
 // DATE OVERRIDES
 // Pin a specific puzzle index to a specific date.
 // Format: { "YYYY-MM-DD": puzzleIndex }  (0-based)
@@ -1263,6 +1627,20 @@ function stopTimer() {
   clearInterval(timerInterval);
   timerInterval = null;
 }
+function pauseTimer() {
+  if (timerInterval === null) return;
+  elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+  clearInterval(timerInterval);
+  timerInterval = null;
+  saveState();
+}
+function resumeTimer() {
+  if (timerInterval !== null || gameOver) return;
+  startTimer();
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { pauseTimer(); } else { resumeTimer(); }
+});
 
 // =================================================================
 // INIT
@@ -1779,20 +2157,20 @@ function showResult(won) {
 
   if (won) {
     const score = elapsedSeconds + (revealCount * 60) + (wrongCount * 10) + (defShown ? 30 : 0);
-    if      (score < 20)   { emoji.textContent = '\uD83C\uDFC6'; hl.textContent = 'Legendary!'; }
-    else if (score < 40)   { emoji.textContent = '\uD83C\uDF0C'; hl.textContent = 'Otherworldly!'; }
-    else if (score < 70)   { emoji.textContent = '\uD83D\uDD2E'; hl.textContent = 'Uncanny!'; }
-    else if (score < 105)  { emoji.textContent = '\uD83C\uDFAF'; hl.textContent = 'Brilliant!'; }
-    else if (score < 150)  { emoji.textContent = '\uD83D\uDD25'; hl.textContent = 'Epic!'; }
-    else if (score < 200)  { emoji.textContent = '\u2728';       hl.textContent = 'Miraculous!'; }
-    else if (score < 270)  { emoji.textContent = '\uD83C\uDF1F'; hl.textContent = 'Extraordinary!'; }
-    else if (score < 360)  { emoji.textContent = '\u2B50';       hl.textContent = 'Impressive!'; }
-    else if (score < 480)  { emoji.textContent = '\u26A1';       hl.textContent = 'Terrific!'; }
-    else if (score < 630)  { emoji.textContent = '\uD83D\uDC4D'; hl.textContent = 'Well Played!'; }
-    else if (score < 810)  { emoji.textContent = '\uD83D\uDCA1'; hl.textContent = 'Nice Job!'; }
-    else if (score < 1020) { emoji.textContent = '\uD83D\uDCAA'; hl.textContent = 'Tenacious!'; }
-    else if (score < 1320) { emoji.textContent = '\uD83D\uDC4F'; hl.textContent = 'You Got It!'; }
-    else                   { emoji.textContent = '\uD83C\uDF31'; hl.textContent = 'Well Done!'; }
+    if      (score < 20)  { emoji.textContent = '\uD83C\uDFC6'; hl.textContent = 'Legendary!'; }
+    else if (score < 40)  { emoji.textContent = '\uD83C\uDF0C'; hl.textContent = 'Otherworldly!'; }
+    else if (score < 60)  { emoji.textContent = '\uD83D\uDD2E'; hl.textContent = 'Uncanny!'; }
+    else if (score < 90)  { emoji.textContent = '\uD83C\uDFAF'; hl.textContent = 'Brilliant!'; }
+    else if (score < 120) { emoji.textContent = '\uD83D\uDD25'; hl.textContent = 'Epic!'; }
+    else if (score < 150) { emoji.textContent = '\u2728';       hl.textContent = 'Miraculous!'; }
+    else if (score < 180) { emoji.textContent = '\uD83C\uDF1F'; hl.textContent = 'Extraordinary!'; }
+    else if (score < 210) { emoji.textContent = '\u2B50';       hl.textContent = 'Impressive!'; }
+    else if (score < 240) { emoji.textContent = '\u26A1';       hl.textContent = 'Terrific!'; }
+    else if (score < 270) { emoji.textContent = '\uD83D\uDCAA'; hl.textContent = 'Tenacious!'; }
+    else if (score < 300) { emoji.textContent = '\uD83D\uDC4D'; hl.textContent = 'Well Played!'; }
+    else if (score < 360) { emoji.textContent = '\uD83D\uDCA1'; hl.textContent = 'Nice Job!'; }
+    else if (score < 420) { emoji.textContent = '\uD83D\uDC4F'; hl.textContent = 'Solid Work!'; }
+    else                  { emoji.textContent = '\uD83C\uDF31'; hl.textContent = 'You Got It!'; }
     const revealStr = revealCount > 0 ? ' · ' + revealCount + ' letter' + (revealCount === 1 ? '' : 's') + ' revealed' : '';
     const wrongStr  = wrongCount  > 0 ? ' · ' + wrongCount  + ' letter' + (wrongCount  === 1 ? '' : 's') + ' guessed incorrectly' : '';
     msg.innerHTML = 'Solved in ' + timeStr + revealStr + wrongStr + '.<br>Share the fun with friends!';
