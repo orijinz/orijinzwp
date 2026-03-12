@@ -1591,7 +1591,7 @@ const PUZZLES = [{"cat":"phrase","origin":"Likely a simplification of a French p
 // GAME STATE
 // =================================================================
 // Characters that are displayed pre-filled and never typed by the player
-function isAutoFill(ch) { return ch === "'" || ch === '&' || ch === '-'; }
+function isAutoFill(ch) { return ch === "'" || ch === '&' || ch === '-' || ch === ','; }
 
 let puzzle, answer, answerClean;
 let currentGuess = [], cursorPos = 0, guesses = [], gameOver = false;
