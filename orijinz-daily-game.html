@@ -986,11 +986,34 @@
     border-bottom: 1px solid var(--border);
     gap: 8px;
   }
-  .lb-col-rank  { width: 28px; text-align: center; flex-shrink: 0; }
-  .lb-col-name  { flex: 1; }
-  .lb-col-loc   { width: 110px; flex-shrink: 0; }
-  .lb-col-score { width: 56px; text-align: right; flex-shrink: 0; }
-  .lb-col-tier  { width: 28px; text-align: center; flex-shrink: 0; }
+  .lb-sort-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .lb-sort-tab {
+    flex: 1;
+    padding: 10px 4px;
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+    user-select: none;
+  }
+  .lb-sort-tab:hover { color: var(--text); }
+  .lb-sort-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  .lb-col-rank   { width: 28px; text-align: center; flex-shrink: 0; }
+  .lb-col-name   { flex: 1; }
+  .lb-col-played { width: 72px; text-align: right; flex-shrink: 0; }
+  .lb-col-streak { width: 72px; text-align: right; flex-shrink: 0; }
+  .lb-col-score  { width: 56px; text-align: right; flex-shrink: 0; }
+  .lb-col-tier   { width: 28px; text-align: center; flex-shrink: 0; }
 
   .lb-row {
     display: flex;
@@ -1005,9 +1028,11 @@
   .lb-row.lb-mine { background: rgba(67,186,208,0.08); }
   .lb-row-rank  { width: 28px; text-align: center; flex-shrink: 0; font-family: 'Space Mono', monospace; font-size: 0.72rem; color: var(--text-muted); }
   .lb-row-name  { flex: 1; font-family: 'Nunito Sans', sans-serif; color: var(--text); font-weight: 600; }
-  .lb-row-loc   { width: 110px; flex-shrink: 0; font-family: 'Nunito Sans', sans-serif; color: var(--text-muted); font-size: 0.78rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .lb-row-score { width: 56px; text-align: right; flex-shrink: 0; font-family: 'Space Mono', monospace; font-size: 0.82rem; font-weight: 700; color: var(--blue); }
-  .lb-row-tier  { width: 28px; text-align: center; flex-shrink: 0; font-size: 1rem; }
+  .lb-row-played { width: 72px; text-align: right; flex-shrink: 0; font-family: 'Space Mono', monospace; font-size: 0.82rem; color: var(--text-muted); }
+  .lb-row-streak { width: 72px; text-align: right; flex-shrink: 0; font-family: 'Space Mono', monospace; font-size: 0.82rem; color: var(--text-muted); }
+  .lb-row-score  { width: 56px; text-align: right; flex-shrink: 0; font-family: 'Space Mono', monospace; font-size: 0.82rem; font-weight: 700; color: var(--blue); }
+  .lb-row-tier   { width: 28px; text-align: center; flex-shrink: 0; font-size: 1rem; }
+  .lb-col-active { color: var(--blue) !important; font-weight: 700; }
   .lb-empty {
     padding: 28px 20px;
     text-align: center;
@@ -1178,6 +1203,10 @@
         <span class="result-stat-value" id="rs-streak">0</span>
         <span class="result-stat-label">Streak</span>
       </div>
+      <div class="result-stat">
+        <span class="result-stat-value" id="rs-score">--</span>
+        <span class="result-stat-label">Score</span>
+      </div>
     </div>
     <div class="result-actions">
       <button class="share-btn" onclick="shareResult()">Share! <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
@@ -1252,7 +1281,7 @@
     <!-- Scoring rubric -->
     <div class="lb-rubric">
       <div class="lb-rubric-title">Scoring &mdash; Lower is Better</div>
-      <div class="lb-rubric-penalty" style="margin-bottom:10px; margin-top:0; font-style:normal; color:var(--text-muted);">Your score = Your time + 60 seconds per letter revealed + 10 seconds per wrong letter + 30 seconds for using the definition</div>
+      <div class="lb-rubric-penalty" style="margin-bottom:10px; margin-top:0; font-style:normal; color:var(--text-muted);">Your score = Your time + 15 seconds per letter revealed + 5 seconds per wrong letter + 30 seconds for using the definition</div>
       <div class="lb-rubric-grid">
         <div class="lb-rubric-row"><span>🏆 Legendary</span><span>&lt; 20</span></div>
         <div class="lb-rubric-row"><span>🌌 Otherworldly</span><span>&lt; 40</span></div>
@@ -1283,11 +1312,17 @@
       </div>
     </div>
 
+    <!-- Sort tabs -->
+    <div class="lb-sort-tabs">
+      <div class="lb-sort-tab active" id="lbTab-score"  onclick="setLbSort('score')">Score</div>
+      <div class="lb-sort-tab"        id="lbTab-played" onclick="setLbSort('played')">Games Played</div>
+      <div class="lb-sort-tab"        id="lbTab-streak" onclick="setLbSort('streak')">Streak</div>
+    </div>
+
     <!-- Leaderboard list -->
-    <div class="lb-list-header">
+    <div class="lb-list-header" id="lbListHeader">
       <span class="lb-col-rank">#</span>
       <span class="lb-col-name">Player</span>
-      <span class="lb-col-loc">Location</span>
       <span class="lb-col-score">Score</span>
       <span class="lb-col-tier"></span>
     </div>
@@ -1363,7 +1398,7 @@ function recordGameResult(won) {
     s.unfinished++;
   }
   if (won) {
-    const score = elapsedSeconds + (revealCount * 60) + (wrongCount * 10) + (defShown ? 30 : 0);
+    const score = elapsedSeconds + (revealCount * 15) + (wrongCount * 5) + (defShown ? 30 : 0);
     if (s.lastPuzzleDate !== todayKey) s.gamesPlayed++; // one day = one count
     s.totalReveals  += revealCount;
     s.totalDefs     += defShown ? 1 : 0;
@@ -1508,10 +1543,35 @@ function handleLbOverlayClick(e) {
   if (e.target === document.getElementById('lbOverlay')) closeLeaderboard();
 }
 
+let lbSortBy = 'score';
+
+function setLbSort(field) {
+  lbSortBy = field;
+  ['score','played','streak'].forEach(f => {
+    document.getElementById('lbTab-' + f).classList.toggle('active', f === field);
+  });
+  renderLeaderboard();
+}
+
+function getAllPlayerStats() {
+  const d = getLbData();
+  const latest = {};
+  for (const key of Object.keys(d)) {
+    const idx = parseInt(key.replace('puzzle_', '')) || 0;
+    for (const e of (d[key].entries || [])) {
+      if (!latest[e.deviceId] || idx > latest[e.deviceId]._idx) {
+        latest[e.deviceId] = { name: e.name, played: e.played || 0, streak: e.streak || 0, _idx: idx, deviceId: e.deviceId };
+      }
+    }
+  }
+  return Object.values(latest);
+}
+
 function submitLeaderboardEntry() {
   const name     = document.getElementById('lbName').value.trim()     || 'Anonymous';
   const location = document.getElementById('lbLocation').value.trim() || '';
-  const score   = elapsedSeconds + (revealCount * 60) + (wrongCount * 10) + (defShown ? 30 : 0);
+  const score   = elapsedSeconds + (revealCount * 15) + (wrongCount * 5) + (defShown ? 30 : 0);
+  const st       = getStats();
   const todayKey = new Date().toDateString();
   const puzzleKey = 'puzzle_' + puzzleIndex;
 
@@ -1521,7 +1581,7 @@ function submitLeaderboardEntry() {
   // Replace existing entry for this device/puzzle if already submitted
   const deviceId = getDeviceId();
   d[puzzleKey].entries = d[puzzleKey].entries.filter(e => e.deviceId !== deviceId);
-  d[puzzleKey].entries.push({ name, location, score, deviceId });
+  d[puzzleKey].entries.push({ name, location, score, played: st.gamesPlayed, streak: streak, deviceId });
   saveLbData(d);
 
   // Hide form after submit
@@ -1540,35 +1600,46 @@ function getDeviceId() {
 }
 
 function renderLeaderboard() {
-  const puzzleKey = 'puzzle_' + puzzleIndex;
-  const d = getLbData();
-  const entries = (d[puzzleKey] && d[puzzleKey].entries) ? [...d[puzzleKey].entries] : [];
-  entries.sort((a, b) => a.score - b.score);
-
   const deviceId = getDeviceId();
-  const list = document.getElementById('lbList');
-  const form = document.getElementById('lbEntryForm');
+  const list     = document.getElementById('lbList');
+  const form     = document.getElementById('lbEntryForm');
+  const hdr      = document.getElementById('lbListHeader');
 
-  // Show form only if player hasn't submitted yet
-  const alreadySubmitted = entries.some(e => e.deviceId === deviceId);
-  form.style.display = alreadySubmitted ? 'none' : '';
+  if (lbSortBy === 'score') {
+    const d = getLbData();
+    const puzzleKey = 'puzzle_' + puzzleIndex;
+    const entries = (d[puzzleKey] && d[puzzleKey].entries) ? [...d[puzzleKey].entries] : [];
+    entries.sort((a, b) => a.score - b.score);
+    const alreadySubmitted = entries.some(e => e.deviceId === deviceId);
+    form.style.display = alreadySubmitted ? 'none' : '';
+    hdr.innerHTML = '<span class="lb-col-rank">#</span><span class="lb-col-name">Player</span><span class="lb-col-score lb-col-active">Score</span><span class="lb-col-tier"></span>';
+    if (entries.length === 0) { list.innerHTML = '<div class="lb-empty">No scores yet today \u2014 be the first!</div>'; return; }
+    list.innerHTML = entries.map((e, i) => {
+      const mine = e.deviceId === deviceId ? ' lb-mine' : '';
+      return '<div class="lb-row' + mine + '"><span class="lb-row-rank">' + (i+1) + '</span><span class="lb-row-name">' + escHtml(e.name) + '</span><span class="lb-row-score">' + e.score + '</span><span class="lb-row-tier">' + lbTierEmoji(e.score) + '</span></div>';
+    }).join('');
 
-  if (entries.length === 0) {
-    list.innerHTML = '<div class="lb-empty">No results yet — be the first to submit!</div>';
-    return;
+  } else {
+    form.style.display = 'none';
+    const players = getAllPlayerStats();
+    if (lbSortBy === 'played') {
+      players.sort((a, b) => b.played - a.played);
+      hdr.innerHTML = '<span class="lb-col-rank">#</span><span class="lb-col-name">Player</span><span class="lb-col-played">Played</span><span class="lb-col-streak" style="color:var(--text-muted)">Streak</span>';
+      if (players.length === 0) { list.innerHTML = '<div class="lb-empty">No data yet \u2014 submit a score first!</div>'; return; }
+      list.innerHTML = players.map((e, i) => {
+        const mine = e.deviceId === deviceId ? ' lb-mine' : '';
+        return '<div class="lb-row' + mine + '"><span class="lb-row-rank">' + (i+1) + '</span><span class="lb-row-name">' + escHtml(e.name) + '</span><span class="lb-row-played lb-col-active">' + e.played + '</span><span class="lb-row-streak">' + e.streak + '</span></div>';
+      }).join('');
+    } else {
+      players.sort((a, b) => b.streak - a.streak);
+      hdr.innerHTML = '<span class="lb-col-rank">#</span><span class="lb-col-name">Player</span><span class="lb-col-streak">Streak</span><span class="lb-col-played" style="color:var(--text-muted)">Played</span>';
+      if (players.length === 0) { list.innerHTML = '<div class="lb-empty">No data yet \u2014 submit a score first!</div>'; return; }
+      list.innerHTML = players.map((e, i) => {
+        const mine = e.deviceId === deviceId ? ' lb-mine' : '';
+        return '<div class="lb-row' + mine + '"><span class="lb-row-rank">' + (i+1) + '</span><span class="lb-row-name">' + escHtml(e.name) + '</span><span class="lb-row-streak lb-col-active">' + e.streak + '</span><span class="lb-row-played">' + e.played + '</span></div>';
+      }).join('');
+    }
   }
-
-  list.innerHTML = entries.map((e, i) => {
-    const loc = e.location || '';
-    const mine = e.deviceId === deviceId ? ' lb-mine' : '';
-    return '<div class="lb-row' + mine + '">' +
-      '<span class="lb-row-rank">' + (i + 1) + '</span>' +
-      '<span class="lb-row-name">' + escHtml(e.name) + '</span>' +
-      '<span class="lb-row-loc">'  + escHtml(loc)    + '</span>' +
-      '<span class="lb-row-score">' + e.score         + '</span>' +
-      '<span class="lb-row-tier">'  + lbTierEmoji(e.score) + '</span>' +
-      '</div>';
-  }).join('');
 }
 
 function escHtml(s) {
@@ -1690,7 +1761,7 @@ function initGame() {
 
   puzzle      = PUZZLES[puzzleIndex];
   answer      = puzzle.answer.toUpperCase();
-  answerClean = answer.replace(/[\s\-'&]/g, '');
+  answerClean = answer.split('').filter(ch => ch !== ' ' && !isAutoFill(ch)).join('');
 
   const now = new Date();
   document.getElementById('dateBadge').innerHTML =
@@ -2183,7 +2254,7 @@ function showResult(won) {
   const timeStr = formatTime(elapsedSeconds);
 
   if (won) {
-    const score = elapsedSeconds + (revealCount * 60) + (wrongCount * 10) + (defShown ? 30 : 0);
+    const score = elapsedSeconds + (revealCount * 15) + (wrongCount * 5) + (defShown ? 30 : 0);
     if      (score < 20)  { emoji.textContent = '\uD83C\uDFC6'; hl.textContent = 'Legendary!'; }
     else if (score < 40)  { emoji.textContent = '\uD83C\uDF0C'; hl.textContent = 'Otherworldly!'; }
     else if (score < 60)  { emoji.textContent = '\uD83D\uDD2E'; hl.textContent = 'Uncanny!'; }
@@ -2215,6 +2286,8 @@ function showResult(won) {
   const s = getStats();
   document.getElementById('rs-played').textContent = s.gamesPlayed;
   document.getElementById('rs-streak').textContent = streak;
+  const score = elapsedSeconds + (revealCount * 15) + (wrongCount * 5) + (defShown ? 30 : 0);
+  document.getElementById('rs-score').textContent = score;
 }
 
 function shareResult() {
