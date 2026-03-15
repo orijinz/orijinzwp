@@ -351,6 +351,16 @@
     gap: 12px;
     flex-wrap: wrap;
     justify-content: center;
+    overflow: hidden;
+    max-height: 120px;
+    transition: opacity 0.7s ease, max-height 0.9s ease, margin 0.9s ease;
+  }
+  .clue-section.fading {
+    opacity: 0;
+    pointer-events: none;
+    max-height: 0;
+    margin-top: 0;
+    margin-bottom: 0;
   }
   .clue-btn {
     -webkit-appearance: none;
@@ -518,6 +528,41 @@
     text-transform: uppercase;
     letter-spacing: 0.1em;
     font-family: 'Space Mono', monospace;
+  }
+  .result-stat.score-info {
+    cursor: pointer;
+    position: relative;
+  }
+  .score-popover {
+    display: none;
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 14px;
+    width: max-content;
+    max-width: 90vw;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    line-height: 1.8;
+    z-index: 200;
+    text-align: left;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.5);
+  }
+  .score-popover.visible { display: block; }
+  .score-breakdown { border-collapse: collapse; }
+  .score-breakdown td:first-child { padding-right: 8px; }
+  .score-breakdown td:last-child { white-space: nowrap; }
+  .score-popover-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 6px;
   }
 
   /* TIDBIT */
@@ -1008,8 +1053,9 @@
   .lb-sort-tab:hover { color: var(--text); }
   .lb-sort-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
 
-  .lb-col-rank   { width: 28px; text-align: center; flex-shrink: 0; }
-  .lb-col-name   { flex: 1; }
+  .lb-col-rank     { width: 28px; text-align: center; flex-shrink: 0; }
+  .lb-col-name     { flex: 1; }
+  .lb-col-location { flex: 1; color: var(--gold); }
   .lb-col-played { width: 72px; text-align: right; flex-shrink: 0; }
   .lb-col-streak { width: 72px; text-align: right; flex-shrink: 0; }
   .lb-col-score  { width: 56px; text-align: right; flex-shrink: 0; }
@@ -1027,7 +1073,8 @@
   .lb-row:last-child { border-bottom: none; }
   .lb-row.lb-mine { background: rgba(67,186,208,0.08); }
   .lb-row-rank  { width: 28px; text-align: center; flex-shrink: 0; font-family: 'Space Mono', monospace; font-size: 0.72rem; color: var(--text-muted); }
-  .lb-row-name  { flex: 1; font-family: 'Nunito Sans', sans-serif; color: var(--text); font-weight: 600; }
+  .lb-row-name     { flex: 1; font-family: 'Nunito Sans', sans-serif; color: var(--text); font-weight: 600; }
+  .lb-row-location { flex: 1; font-family: 'Nunito Sans', sans-serif; color: var(--gold); font-weight: 600; font-size: 0.82rem; }
   .lb-row-played { width: 72px; text-align: right; flex-shrink: 0; font-family: 'Space Mono', monospace; font-size: 0.82rem; color: var(--text-muted); }
   .lb-row-streak { width: 72px; text-align: right; flex-shrink: 0; font-family: 'Space Mono', monospace; font-size: 0.82rem; color: var(--text-muted); }
   .lb-row-score  { width: 56px; text-align: right; flex-shrink: 0; font-family: 'Space Mono', monospace; font-size: 0.82rem; font-weight: 700; color: var(--blue); }
@@ -1203,9 +1250,18 @@
         <span class="result-stat-value" id="rs-streak">0</span>
         <span class="result-stat-label">Streak</span>
       </div>
-      <div class="result-stat">
+      <div class="result-stat score-info" onclick="toggleScoreInfo(event)">
         <span class="result-stat-value" id="rs-score">--</span>
-        <span class="result-stat-label">Score</span>
+        <span class="result-stat-label">Score &#x24D8;</span>
+        <div class="score-popover" id="scorePopover">
+          <div class="score-popover-title">How scores work &mdash; lower is better</div>
+          <table class="score-breakdown">
+            <tr><td>&#x23F1;</td><td>Your time</td></tr>
+            <tr><td>&#x1F4D6;</td><td>+30s for using the definition</td></tr>
+            <tr><td>&#x1F521;</td><td>+15s per letter revealed</td></tr>
+            <tr><td>&#x26A0;&#xFE0F;</td><td>+5s per wrong letter</td></tr>
+          </table>
+        </div>
       </div>
     </div>
     <div class="result-actions">
@@ -1304,8 +1360,8 @@
     <div class="lb-entry-form" id="lbEntryForm">
       <div class="lb-entry-form-title">Add your Name (Optional)</div>
       <div class="lb-input-row">
-        <input class="lb-input" id="lbName"     type="text" placeholder="Name"     maxlength="32" autocomplete="off">
-        <input class="lb-input" id="lbLocation" type="text" placeholder="Location" maxlength="64" autocomplete="off">
+        <input class="lb-input" id="lbName"     type="text" placeholder="Name"     maxlength="32" autocomplete="off" onkeydown="if(event.key==='Enter')submitLeaderboardEntry()">
+        <input class="lb-input" id="lbLocation" type="text" placeholder="Location" maxlength="64" autocomplete="off" onkeydown="if(event.key==='Enter')submitLeaderboardEntry()">
       </div>
       <div style="display:flex; justify-content:flex-end;">
         <button class="lb-submit-btn" onclick="submitLeaderboardEntry()">Submit Score</button>
@@ -1560,7 +1616,7 @@ function getAllPlayerStats() {
     const idx = parseInt(key.replace('puzzle_', '')) || 0;
     for (const e of (d[key].entries || [])) {
       if (!latest[e.deviceId] || idx > latest[e.deviceId]._idx) {
-        latest[e.deviceId] = { name: e.name, played: e.played || 0, streak: e.streak || 0, _idx: idx, deviceId: e.deviceId };
+        latest[e.deviceId] = { name: e.name, location: e.location || '', played: e.played || 0, streak: e.streak || 0, _idx: idx, deviceId: e.deviceId };
       }
     }
   }
@@ -1612,11 +1668,11 @@ function renderLeaderboard() {
     entries.sort((a, b) => a.score - b.score);
     const alreadySubmitted = entries.some(e => e.deviceId === deviceId);
     form.style.display = alreadySubmitted ? 'none' : '';
-    hdr.innerHTML = '<span class="lb-col-rank">#</span><span class="lb-col-name">Player</span><span class="lb-col-score lb-col-active">Score</span><span class="lb-col-tier"></span>';
+    hdr.innerHTML = '<span class="lb-col-rank">#</span><span class="lb-col-name">Player</span><span class="lb-col-location" style="color:var(--gold)">Location</span><span class="lb-col-score lb-col-active">Score</span><span class="lb-col-tier"></span>';
     if (entries.length === 0) { list.innerHTML = '<div class="lb-empty">No scores yet today \u2014 be the first!</div>'; return; }
     list.innerHTML = entries.map((e, i) => {
       const mine = e.deviceId === deviceId ? ' lb-mine' : '';
-      return '<div class="lb-row' + mine + '"><span class="lb-row-rank">' + (i+1) + '</span><span class="lb-row-name">' + escHtml(e.name) + '</span><span class="lb-row-score">' + e.score + '</span><span class="lb-row-tier">' + lbTierEmoji(e.score) + '</span></div>';
+      return '<div class="lb-row' + mine + '"><span class="lb-row-rank">' + (i+1) + '</span><span class="lb-row-name">' + escHtml(e.name) + '</span><span class="lb-row-location">' + escHtml(e.location || '') + '</span><span class="lb-row-score">' + e.score + '</span><span class="lb-row-tier">' + lbTierEmoji(e.score) + '</span></div>';
     }).join('');
 
   } else {
@@ -1624,19 +1680,19 @@ function renderLeaderboard() {
     const players = getAllPlayerStats();
     if (lbSortBy === 'played') {
       players.sort((a, b) => b.played - a.played);
-      hdr.innerHTML = '<span class="lb-col-rank">#</span><span class="lb-col-name">Player</span><span class="lb-col-played">Played</span><span class="lb-col-streak" style="color:var(--text-muted)">Streak</span>';
+      hdr.innerHTML = '<span class="lb-col-rank">#</span><span class="lb-col-name">Player</span><span class="lb-col-location" style="color:var(--gold)">Location</span><span class="lb-col-played">Played</span><span class="lb-col-streak" style="color:var(--text-muted)">Streak</span>';
       if (players.length === 0) { list.innerHTML = '<div class="lb-empty">No data yet \u2014 submit a score first!</div>'; return; }
       list.innerHTML = players.map((e, i) => {
         const mine = e.deviceId === deviceId ? ' lb-mine' : '';
-        return '<div class="lb-row' + mine + '"><span class="lb-row-rank">' + (i+1) + '</span><span class="lb-row-name">' + escHtml(e.name) + '</span><span class="lb-row-played lb-col-active">' + e.played + '</span><span class="lb-row-streak">' + e.streak + '</span></div>';
+        return '<div class="lb-row' + mine + '"><span class="lb-row-rank">' + (i+1) + '</span><span class="lb-row-name">' + escHtml(e.name) + '</span><span class="lb-row-location">' + escHtml(e.location || '') + '</span><span class="lb-row-played lb-col-active">' + e.played + '</span><span class="lb-row-streak">' + e.streak + '</span></div>';
       }).join('');
     } else {
       players.sort((a, b) => b.streak - a.streak);
-      hdr.innerHTML = '<span class="lb-col-rank">#</span><span class="lb-col-name">Player</span><span class="lb-col-streak">Streak</span><span class="lb-col-played" style="color:var(--text-muted)">Played</span>';
+      hdr.innerHTML = '<span class="lb-col-rank">#</span><span class="lb-col-name">Player</span><span class="lb-col-location" style="color:var(--gold)">Location</span><span class="lb-col-streak">Streak</span><span class="lb-col-played" style="color:var(--text-muted)">Played</span>';
       if (players.length === 0) { list.innerHTML = '<div class="lb-empty">No data yet \u2014 submit a score first!</div>'; return; }
       list.innerHTML = players.map((e, i) => {
         const mine = e.deviceId === deviceId ? ' lb-mine' : '';
-        return '<div class="lb-row' + mine + '"><span class="lb-row-rank">' + (i+1) + '</span><span class="lb-row-name">' + escHtml(e.name) + '</span><span class="lb-row-streak lb-col-active">' + e.streak + '</span><span class="lb-row-played">' + e.played + '</span></div>';
+        return '<div class="lb-row' + mine + '"><span class="lb-row-rank">' + (i+1) + '</span><span class="lb-row-name">' + escHtml(e.name) + '</span><span class="lb-row-location">' + escHtml(e.location || '') + '</span><span class="lb-row-streak lb-col-active">' + e.streak + '</span><span class="lb-row-played">' + e.played + '</span></div>';
       }).join('');
     }
   }
@@ -2230,15 +2286,17 @@ function showResult(won) {
   const kb      = document.getElementById('keyboard');
   const divider = document.querySelector('.section-divider');
   const rp      = document.getElementById('resultPanel');
+  const cs      = document.querySelector('.clue-section');
 
-  // Fade out keyboard + divider (opacity only — no layout shift)
+  // Fade out keyboard + divider + clue buttons
   kb.classList.add('fading');
   if (divider) divider.classList.add('fading');
+  if (cs) cs.classList.add('fading');
 
   // Show result panel — animation handles the fade-in
   rp.classList.add('visible');
 
-  // After result animation finishes, silently remove keyboard from layout
+  // After result animation finishes, silently remove from layout
   setTimeout(() => {
     kb.style.display = 'none';
     if (divider) divider.style.display = 'none';
@@ -2289,6 +2347,15 @@ function showResult(won) {
   const score = elapsedSeconds + (revealCount * 15) + (wrongCount * 5) + (defShown ? 30 : 0);
   document.getElementById('rs-score').textContent = score;
 }
+
+function toggleScoreInfo(e) {
+  e.stopPropagation();
+  document.getElementById('scorePopover').classList.toggle('visible');
+}
+document.addEventListener('click', function() {
+  const p = document.getElementById('scorePopover');
+  if (p) p.classList.remove('visible');
+});
 
 function shareResult() {
   const timeStr  = formatTime(elapsedSeconds);
